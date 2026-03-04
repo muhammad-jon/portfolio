@@ -1,6 +1,7 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Linkedin, Mail, MessageCircle, Send } from "lucide-react";
+import { SocialLinks } from "../components/SocialLinks";
 
 type FormState = {
   name: string;
@@ -36,12 +37,18 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="container-main scroll-mt-24 pb-20 md:pb-28">
-      <h2 className="text-3xl md:text-4xl">Contact</h2>
+    <motion.section
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.28, ease: "easeOut" }}
+      className="container-main pb-16 md:pb-24"
+    >
+      <h1 className="text-4xl md:text-5xl">Contact</h1>
 
       <div className="mt-6 grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
         <article className="panel p-6">
-          <h3 className="text-2xl">Let's build something useful.</h3>
+          <h2 className="text-2xl">Let's build something useful.</h2>
           <p className="mt-2 text-sm text-muted">Open to Frontend roles</p>
 
           <ul className="mt-6 space-y-3 text-sm">
@@ -56,7 +63,7 @@ export function Contact() {
             </li>
             <li>
               <a
-                href="https://t.me/yourhandle"
+                href="https://t.me/emuhammadjon"
                 target="_blank"
                 rel="noreferrer"
                 className="focus-ring inline-flex items-center gap-2 text-muted transition hover:text-text"
@@ -67,7 +74,7 @@ export function Contact() {
             </li>
             <li>
               <a
-                href="https://linkedin.com/in/yourhandle"
+                href="https://www.linkedin.com/in/muhammad-jon/"
                 target="_blank"
                 rel="noreferrer"
                 className="focus-ring inline-flex items-center gap-2 text-muted transition hover:text-text"
@@ -77,6 +84,8 @@ export function Contact() {
               </a>
             </li>
           </ul>
+
+          <SocialLinks className="mt-6" />
         </article>
 
         <article className="panel p-6">
@@ -150,6 +159,6 @@ export function Contact() {
           </motion.div>
         )}
       </AnimatePresence>
-    </section>
+    </motion.section>
   );
 }

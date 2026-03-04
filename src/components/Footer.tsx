@@ -1,7 +1,7 @@
 const socials = [
-  { label: "GitHub", href: "https://github.com/yourhandle" },
-  { label: "LinkedIn", href: "https://linkedin.com/in/yourhandle" },
-  { label: "Telegram", href: "https://t.me/yourhandle" },
+  { label: "GitHub", href: "http://github.com/muhammad-jon/" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/muhammad-jon/" },
+  { label: "Telegram", href: "https://t.me/emuhammadjon" },
 ];
 
 export function Footer() {
@@ -10,7 +10,7 @@ export function Footer() {
   return (
     <footer className="border-t border-line/70">
       <div className="container-main flex flex-col items-center justify-between gap-3 py-6 text-sm text-muted sm:flex-row">
-        <p>© {year} WebCode</p>
+        <p>(c) {year} WebCode</p>
         <ul className="flex items-center gap-4">
           {socials.map((social) => (
             <li key={social.label}>

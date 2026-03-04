@@ -43,7 +43,7 @@ export default function App() {
   }, [isDark]);
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative flex min-h-screen flex-col">
       <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10">
         <div className="absolute -left-24 top-[-12rem] h-[26rem] w-[26rem] rounded-full bg-accent/10 blur-3xl" />
         <div className="absolute -right-16 top-[22rem] h-[22rem] w-[22rem] rounded-full bg-accent/10 blur-3xl" />
