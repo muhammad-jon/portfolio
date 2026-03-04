@@ -1,0 +1,60 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --page: 220 24% 97%;
+  --surface: 0 0% 100%;
+  --line: 220 14% 86%;
+  --text: 224 30% 14%;
+  --muted: 220 12% 40%;
+  --accent: 191 73% 42%;
+}
+
+.dark {
+  --page: 223 24% 9%;
+  --surface: 224 21% 12%;
+  --line: 220 14% 26%;
+  --text: 210 25% 95%;
+  --muted: 219 12% 70%;
+  --accent: 186 66% 56%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-page font-body text-text antialiased;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(circle at 12% -5%, hsl(var(--accent) / 0.14), transparent 32%),
+    radial-gradient(circle at 92% 10%, hsl(var(--accent) / 0.1), transparent 30%);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  @apply font-display tracking-tight;
+}
+
+::selection {
+  background: hsl(var(--accent) / 0.26);
+}
+
+@layer components {
+  .container-main {
+    @apply mx-auto w-full max-w-[1100px] px-5 md:px-8;
+  }
+
+  .panel {
+    @apply rounded-2xl border border-line bg-surface/90 shadow-soft;
+  }
+
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-page;
+  }
+}
