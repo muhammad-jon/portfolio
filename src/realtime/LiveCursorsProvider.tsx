@@ -22,9 +22,38 @@ import type {
 const THROTTLE_MS = Math.floor(1000 / 12);
 const STALE_MS = 10_000;
 const STALE_SWEEP_MS = 2_000;
-const HIDDEN_COORD = -10_000;
+const HIDDEN_COORD = -1;
 
 const LiveCursorsContext = createContext<LiveCursorsStore | null>(null);
+
+function clamp01(value: number) {
+  if (value < 0) return 0;
+  if (value > 1) return 1;
+  return value;
+}
+
+function measureDocumentSize() {
+  const doc = document.documentElement;
+  const body = document.body;
+
+  const width = Math.max(
+    doc.scrollWidth,
+    doc.clientWidth,
+    body?.scrollWidth ?? 0,
+    body?.clientWidth ?? 0,
+    1,
+  );
+
+  const height = Math.max(
+    doc.scrollHeight,
+    doc.clientHeight,
+    body?.scrollHeight ?? 0,
+    body?.clientHeight ?? 0,
+    1,
+  );
+
+  return { width, height };
+}
 
 function hasCursorChanged(
   previous: CursorSnapshot | undefined,
@@ -32,8 +61,8 @@ function hasCursorChanged(
 ) {
   if (!previous) return true;
   return (
-    previous.x !== next.x ||
-    previous.y !== next.y ||
+    previous.nx !== next.nx ||
+    previous.ny !== next.ny ||
     previous.page !== next.page ||
     previous.name !== next.name ||
     previous.color !== next.color ||
@@ -133,17 +162,22 @@ export function LiveCursorsProvider({ children }: { children: ReactNode }) {
 
     const pointer = pointerClientRef.current;
     const isVisible = !forceHidden && pointerInsideRef.current && Boolean(pointer);
-
-    const x = isVisible && pointer ? pointer.x + window.scrollX : HIDDEN_COORD;
-    const y = isVisible && pointer ? pointer.y + window.scrollY : HIDDEN_COORD;
     const ts = Date.now();
 
     const payload: CursorUpdatePayload = {
-      x,
-      y,
+      nx: HIDDEN_COORD,
+      ny: HIDDEN_COORD,
       page: pathRef.current,
       ts,
     };
+
+    if (isVisible && pointer) {
+      const { width, height } = measureDocumentSize();
+      const docX = pointer.x + window.scrollX;
+      const docY = pointer.y + window.scrollY;
+      payload.nx = clamp01(docX / width);
+      payload.ny = clamp01(docY / height);
+    }
 
     socket.emit("cursor:update", payload);
     lastSentAtRef.current = ts;

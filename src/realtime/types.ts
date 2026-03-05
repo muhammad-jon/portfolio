@@ -5,8 +5,8 @@ export interface SessionPayload {
 }
 
 export interface CursorUpdatePayload {
-  x: number;
-  y: number;
+  nx: number;
+  ny: number;
   page: string;
   ts: number;
 }
