@@ -5,15 +5,28 @@ const skills = [
   "TypeScript",
   "Next.js",
   "Redux",
-  "Accessibility",
-  "Performance",
-  "Design Systems",
+  "Tailwind CSS",
+  "MUI",
+  "Chakra UI",
+  "Sass",
+  "Bootstrap",
+  "React Query",
+  "REST APIs",
+  "Firebase",
+  "Node.js",
+  "Socket.IO",
+  "MongoDB",
+  "Git",
+  "GitHub",
+  "Swagger",
+  "Postman",
+  "ApexCharts",
 ];
 
 const highlights = [
-  "Builds clean, maintainable UI architecture for long-term product growth.",
-  "Prioritizes performance and interaction quality from the first implementation pass.",
-  "Collaborates closely with design and product to ship practical improvements quickly.",
+  "3+ years of hands-on frontend engineering experience with React and TypeScript.",
+  "Built AI-based products, real-time communication features, and role-based enterprise systems.",
+  "Focused on performance optimization, clean architecture, and long-term maintainability.",
 ];
 
 export function About() {
@@ -28,8 +41,9 @@ export function About() {
       <header className="max-w-3xl">
         <h1 className="text-4xl md:text-5xl">About</h1>
         <p className="mt-4 text-base leading-relaxed text-muted md:text-lg">
-          I am a frontend engineer focused on fast, reliable interfaces. My work sits at the
-          intersection of product thinking, visual clarity, and robust implementation details.
+          I am a frontend developer based in Tashkent, Uzbekistan. I enjoy building fast and
+          reliable interfaces, solving performance bottlenecks, and improving UX through clean and
+          maintainable code.
         </p>
       </header>
 

@@ -9,39 +9,48 @@ export type ExperienceItem = {
 
 export const experience: ExperienceItem[] = [
   {
-    id: "nova-labs",
-    company: "Nova Labs",
-    role: "Senior Frontend Engineer",
-    years: "2024 - Present",
-    summary:
-      "Leading the React platform layer, focusing on performance budgets, shared component standards, and predictable release quality.",
-    tags: ["React", "TypeScript", "Architecture"],
-  },
-  {
-    id: "atlas-digital",
-    company: "Atlas Digital",
-    role: "Frontend Engineer",
-    years: "2022 - 2024",
-    summary:
-      "Built and maintained customer-facing product flows with reusable UI primitives and measurable UX improvements.",
-    tags: ["Next.js", "Redux", "UX"],
-  },
-  {
-    id: "pixel-forge",
-    company: "Pixel Forge Studio",
-    role: "UI Engineer",
-    years: "2021 - 2022",
-    summary:
-      "Delivered landing pages and dashboard interfaces with a focus on semantic markup, accessibility, and maintainable CSS architecture.",
-    tags: ["Tailwind", "Accessibility", "UI"],
-  },
-  {
-    id: "freelance",
-    company: "Independent",
+    id: "smart-base",
+    company: "Smart-Base",
     role: "Frontend Developer",
-    years: "2019 - 2021",
+    years: "May 2025 - Present",
     summary:
-      "Worked with startups to ship MVP interfaces quickly while maintaining code quality and scalable component patterns.",
-    tags: ["React", "MVP", "Product"],
+      "Leading frontend development of an AI-driven platform for automated data collection and facial recognition analytics, including real-time dashboards and communication systems.",
+    tags: ["React", "TypeScript", "React Query", "ApexCharts", "WebRTC"],
+  },
+  {
+    id: "ssbrok",
+    company: "SSBrok.uz",
+    role: "Frontend Developer (Contract)",
+    years: "Dec 2024 - Present",
+    summary:
+      "Built a customs automation platform that reduced processing time from days to hours, with role-based navigation and optimized API interactions for real-time updates.",
+    tags: ["React", "TypeScript", "REST APIs", "Role-based Access"],
+  },
+  {
+    id: "k-group",
+    company: "K-Group Dream Team",
+    role: "Freelance / Independent Projects",
+    years: "Feb 2024 - Dec 2024",
+    summary:
+      "Developed SAP and CRM integration solutions, built an eCommerce platform with improved load performance, and delivered Web3 and quiz platforms.",
+    tags: ["Next.js", "Sass", "Firebase", "Tailwind CSS", "CRM"],
+  },
+  {
+    id: "tenx",
+    company: "TenX Group",
+    role: "Frontend Developer",
+    years: "Nov 2022 - Dec 2023",
+    summary:
+      "Built a quote generation tool reducing input time by 20% and improved UI systems, increasing engagement by 25% through frontend architecture improvements.",
+    tags: ["React", "TypeScript", "UX", "Performance"],
+  },
+  {
+    id: "pdp",
+    company: "PDP Academy",
+    role: "Frontend Developer, Assistant",
+    years: "Mar 2022 - Apr 2023",
+    summary:
+      "Developed an expense tracking app with secure authentication and image-based records using React and Firebase, focusing on clean code and cross-browser compatibility.",
+    tags: ["React", "Firebase", "API Integration", "Optimization"],
   },
 ];

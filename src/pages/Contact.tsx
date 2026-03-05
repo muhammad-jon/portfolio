@@ -1,6 +1,6 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Linkedin, Mail, MessageCircle, Send } from "lucide-react";
+import { Linkedin, Mail, MessageCircle, Phone, Send } from "lucide-react";
 import { SocialLinks } from "../components/SocialLinks";
 
 type FormState = {
@@ -56,6 +56,15 @@ export function Contact() {
           <ul className="mt-6 space-y-3 text-sm">
             <li>
               <a
+                href="tel:+998903747483"
+                className="focus-ring inline-flex items-center gap-2 text-muted transition hover:text-text"
+              >
+                <Phone size={16} />
+                +99890 374 74 83
+              </a>
+            </li>
+            <li>
+              <a
                 href="mailto:memuhammadjon@gmail.com"
                 className="focus-ring inline-flex items-center gap-2 text-muted transition hover:text-text"
               >
@@ -65,7 +74,7 @@ export function Contact() {
             </li>
             <li>
               <a
-                href="https://t.me/emuhammadjon"
+                href="https://t.me/eMuhammadjon"
                 target="_blank"
                 rel="noreferrer"
                 className="focus-ring inline-flex items-center gap-2 text-muted transition hover:text-text"

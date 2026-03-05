@@ -3,7 +3,7 @@ import { ArrowRight, CalendarCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SocialLinks } from "./SocialLinks";
 
-const chips = ["React", "TypeScript", "Redux", "Next.js"];
+const chips = ["React", "TypeScript", "Next.js", "React Query", "Socket.IO", "Tailwind CSS"];
 
 export function Hero() {
   return (
@@ -34,13 +34,13 @@ export function Hero() {
         </div>
 
         <div>
-          <p className="mb-3 text-sm uppercase tracking-[0.2em] text-muted">Frontend Engineer</p>
+          <p className="mb-3 text-sm uppercase tracking-[0.2em] text-muted">Muxammad O'rolov</p>
           <h1 className="max-w-3xl text-4xl leading-tight md:text-6xl">
-            Frontend Developer who builds fast, clean interfaces.
+            Frontend Developer with 3+ years building scalable React products.
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted md:text-lg">
-            I build modern products using React and TypeScript, with strong attention to performance,
-            UX clarity, and scalable UI architecture.
+            I build AI-driven platforms, real-time communication systems, and role-based enterprise
+            solutions with a strong focus on performance and maintainable code.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">

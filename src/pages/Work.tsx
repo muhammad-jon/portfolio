@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Search } from "lucide-react";
+import { education } from "../data/education";
 import { experience } from "../data/experience";
 import { projects } from "../data/projects";
 
@@ -81,6 +82,24 @@ export function Work() {
           ) : (
             <p className="px-5 py-6 text-sm text-muted">No matching items found.</p>
           )}
+        </div>
+      </section>
+
+      <section className="mt-8">
+        <h2 className="text-2xl md:text-3xl">Education</h2>
+        <div className="panel mt-4 overflow-hidden">
+          <ul className="divide-y divide-line/80">
+            {education.map((item) => (
+              <li key={item.id} className="px-5 py-4">
+                <div className="grid gap-2 sm:grid-cols-[1.4fr_1fr_auto] sm:gap-4">
+                  <p className="text-base">{item.degree}</p>
+                  <p className="text-sm text-muted sm:text-base">{item.institution}</p>
+                  <p className="text-sm text-muted sm:text-right">{item.years}</p>
+                </div>
+                <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted">{item.details}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

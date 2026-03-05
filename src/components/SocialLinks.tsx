@@ -11,7 +11,7 @@ const links = [
   },
   {
     label: "Telegram",
-    href: "https://t.me/emuhammadjon",
+    href: "https://t.me/eMuhammadjon",
     Icon: Send,
   },
   {
