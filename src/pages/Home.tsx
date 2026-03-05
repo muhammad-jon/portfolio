@@ -20,7 +20,7 @@ export function Home() {
         <div className="mb-7 flex items-end justify-between gap-4">
           <h2 className="text-3xl md:text-4xl">Works</h2>
           <Link
-            to="/projects"
+            to="/work"
             className="focus-ring inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm text-muted transition hover:text-text"
           >
             See more
