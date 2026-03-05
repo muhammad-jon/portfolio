@@ -5,6 +5,8 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
+import { MousePointer2 } from "lucide-react";
+import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
 import { useLiveCursorsStore } from "./LiveCursorsProvider";
 import type { CursorSnapshot } from "./types";
@@ -14,6 +16,7 @@ const SNAP_DISTANCE = 0.2;
 const HIDDEN_THRESHOLD = 0;
 const CURSOR_W = 28;
 const CURSOR_H = 28;
+const VISIBILITY_STORAGE_KEY = "live-cursors-visible";
 
 interface DocumentBounds {
   width: number;
@@ -27,6 +30,42 @@ interface AnimatedCursor extends CursorSnapshot {
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
+}
+
+function getInitialVisibility() {
+  if (typeof window === "undefined") {
+    return true;
+  }
+
+  const saved = window.localStorage.getItem(VISIBILITY_STORAGE_KEY);
+  if (saved === "0") {
+    return false;
+  }
+  if (saved === "1") {
+    return true;
+  }
+  return true;
+}
+
+function MousePointer2Off({ size }: any) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      className="lucide lucide-mouse-pointer2-off-icon lucide-mouse-pointer-2-off"
+    >
+      <path d="m15.55 8.45 5.138 2.087a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063L8.45 15.551" />
+      <path d="M22 2 2 22" />
+      <path d="m6.816 11.528-2.779-6.84a.495.495 0 0 1 .651-.651l6.84 2.779" />
+    </svg>
+  );
 }
 
 function measureDocumentBounds(): DocumentBounds {
@@ -97,6 +136,7 @@ export function LiveCursorsLayer() {
     store.getVersion,
     store.getVersion,
   );
+  const [isVisible, setIsVisible] = useState<boolean>(getInitialVisibility);
   const animatedRef = useRef(new Map<string, AnimatedCursor>());
   const [frame, setFrame] = useState(0);
   const [bounds, setBounds] = useState<DocumentBounds>(() => {
@@ -110,6 +150,13 @@ export function LiveCursorsLayer() {
   useEffect(() => {
     boundsRef.current = bounds;
   }, [bounds]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    window.localStorage.setItem(VISIBILITY_STORAGE_KEY, isVisible ? "1" : "0");
+  }, [isVisible]);
 
   useEffect(() => {
     const source = store.getCursors();
@@ -245,45 +292,80 @@ export function LiveCursorsLayer() {
     );
   }, [frame, version]);
 
-  if (cursors.length === 0) {
-    return null;
-  }
-
-  return (
-    <div
+  const toggleButton = (
+    <button
+      type="button"
+      onClick={() => setIsVisible((previous) => !previous)}
+      aria-label={
+        isVisible ? "Hide live cursors overlay" : "Show live cursors overlay"
+      }
+      title={isVisible ? "Hide live cursors" : "Show live cursors"}
       style={{
-        position: "absolute",
-        left: 0,
-        top: 0,
-        width: "100%",
-        height: `${bounds.height}px`,
-        pointerEvents: "none",
-        overflow: "hidden",
-        zIndex: 9999,
+        position: "fixed",
+        right: "16px",
+        bottom: "16px",
+        zIndex: 2147483647,
+        width: "40px",
+        height: "40px",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: "9999px",
+        border: "1px solid hsl(var(--line) / 0.8)",
+        background: "hsl(var(--surface) / 0.9)",
+        color: "hsl(var(--muted))",
+        boxShadow: "0 10px 24px rgba(0,0,0,0.18)",
+        backdropFilter: "blur(8px)",
+        pointerEvents: "auto",
+        cursor: "pointer",
       }}
     >
-      {cursors.map((cursor) => {
-        const isCurrentPage = cursor.page === location.pathname;
-        return (
-          <div
-            key={cursor.id}
-            style={{
-              position: "absolute",
-              transform: `translate3d(${cursor.renderX}px, ${cursor.renderY}px, 0)`,
-              opacity: isCurrentPage ? 1 : 0.5,
-              willChange: "transform",
-            }}
-          >
-            <CursorArrow color={cursor.color} />
-            <div
-              className="absolute left-3 top-4 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold text-white shadow-[0_4px_12px_rgba(0,0,0,0.24)]"
-              style={{ backgroundColor: cursor.color }}
-            >
-              {cursor.name} {!isCurrentPage && `(${cursor.page})`}
-            </div>
-          </div>
-        );
-      })}
-    </div>
+      {isVisible ? <MousePointer2 size={16} /> : <MousePointer2Off size={16} />}
+    </button>
+  );
+
+  return (
+    <>
+      {isVisible && cursors.length > 0 ? (
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            width: "100%",
+            height: `${bounds.height}px`,
+            pointerEvents: "none",
+            overflow: "hidden",
+            zIndex: 9999,
+          }}
+        >
+          {cursors.map((cursor) => {
+            const isCurrentPage = cursor.page === location.pathname;
+            return (
+              <div
+                key={cursor.id}
+                style={{
+                  position: "absolute",
+                  transform: `translate3d(${cursor.renderX}px, ${cursor.renderY}px, 0)`,
+                  opacity: isCurrentPage ? 1 : 0.5,
+                  willChange: "transform",
+                }}
+              >
+                <CursorArrow color={cursor.color} />
+                <div
+                  className="absolute left-3 top-4 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold text-white shadow-[0_4px_12px_rgba(0,0,0,0.24)]"
+                  style={{ backgroundColor: cursor.color }}
+                >
+                  {cursor.name} {!isCurrentPage && `(${cursor.page})`}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
+      {typeof document !== "undefined"
+        ? createPortal(toggleButton, document.body)
+        : toggleButton}
+    </>
   );
 }
