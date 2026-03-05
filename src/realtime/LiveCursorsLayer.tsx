@@ -11,36 +11,61 @@ import type { CursorSnapshot } from "./types";
 
 const LERP_FACTOR = 0.35;
 const SNAP_DISTANCE = 0.2;
-const HIDDEN_THRESHOLD = -9_000;
+const HIDDEN_THRESHOLD = 0;
+const CURSOR_W = 28;
+const CURSOR_H = 28;
+
+interface DocumentBounds {
+  width: number;
+  height: number;
+}
 
 interface AnimatedCursor extends CursorSnapshot {
-  targetX: number;
-  targetY: number;
   renderX: number;
   renderY: number;
 }
 
-function measureDocumentBounds() {
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function measureDocumentBounds(): DocumentBounds {
   const doc = document.documentElement;
   const body = document.body;
 
-  const height = Math.max(
-    doc.scrollHeight,
-    doc.offsetHeight,
-    body?.scrollHeight ?? 0,
-    body?.offsetHeight ?? 0,
-    window.innerHeight,
-  );
-
   const width = Math.max(
     doc.scrollWidth,
-    doc.offsetWidth,
+    doc.clientWidth,
     body?.scrollWidth ?? 0,
-    body?.offsetWidth ?? 0,
+    body?.clientWidth ?? 0,
     window.innerWidth,
+    1,
+  );
+
+  const height = Math.max(
+    doc.scrollHeight,
+    doc.clientHeight,
+    body?.scrollHeight ?? 0,
+    body?.clientHeight ?? 0,
+    window.innerHeight,
+    1,
   );
 
   return { width, height };
+}
+
+function normalizedToDocumentPixels(
+  nx: number,
+  ny: number,
+  bounds: DocumentBounds,
+) {
+  const maxX = Math.max(0, bounds.width - CURSOR_W);
+  const maxY = Math.max(0, bounds.height - CURSOR_H);
+
+  return {
+    x: clamp(nx * bounds.width, 0, maxX),
+    y: clamp(ny * bounds.height, 0, maxY),
+  };
 }
 
 function CursorArrow({ color }: { color: string }) {
@@ -64,10 +89,6 @@ function CursorArrow({ color }: { color: string }) {
   );
 }
 
-function clamp(value: number, min: number, max: number) {
-  return Math.min(Math.max(value, min), max);
-}
-
 export function LiveCursorsLayer() {
   const location = useLocation();
   const store = useLiveCursorsStore();
@@ -78,12 +99,17 @@ export function LiveCursorsLayer() {
   );
   const animatedRef = useRef(new Map<string, AnimatedCursor>());
   const [frame, setFrame] = useState(0);
-  const [bounds, setBounds] = useState(() => {
+  const [bounds, setBounds] = useState<DocumentBounds>(() => {
     if (typeof window === "undefined") {
-      return { width: 0, height: 0 };
+      return { width: 1, height: 1 };
     }
     return measureDocumentBounds();
   });
+  const boundsRef = useRef(bounds);
+
+  useEffect(() => {
+    boundsRef.current = bounds;
+  }, [bounds]);
 
   useEffect(() => {
     const source = store.getCursors();
@@ -93,12 +119,15 @@ export function LiveCursorsLayer() {
     for (const [id, cursor] of source.entries()) {
       const existing = animated.get(id);
       if (!existing) {
+        const mapped = normalizedToDocumentPixels(
+          cursor.nx,
+          cursor.ny,
+          boundsRef.current,
+        );
         animated.set(id, {
           ...cursor,
-          targetX: cursor.x,
-          targetY: cursor.y,
-          renderX: cursor.x,
-          renderY: cursor.y,
+          renderX: mapped.x,
+          renderY: mapped.y,
         });
         changed = true;
         continue;
@@ -107,11 +136,11 @@ export function LiveCursorsLayer() {
       existing.sessionId = cursor.sessionId;
       existing.name = cursor.name;
       existing.color = cursor.color;
+      existing.nx = cursor.nx;
+      existing.ny = cursor.ny;
       existing.page = cursor.page;
       existing.ts = cursor.ts;
       existing.lastSeen = cursor.lastSeen;
-      existing.targetX = cursor.x;
-      existing.targetY = cursor.y;
     }
 
     for (const id of Array.from(animated.keys())) {
@@ -132,22 +161,31 @@ export function LiveCursorsLayer() {
       let changed = false;
 
       for (const cursor of animatedRef.current.values()) {
-        const dx = cursor.targetX - cursor.renderX;
-        const dy = cursor.targetY - cursor.renderY;
+        if (cursor.nx < HIDDEN_THRESHOLD || cursor.ny < HIDDEN_THRESHOLD) {
+          continue;
+        }
 
-        if (Math.abs(dx) > SNAP_DISTANCE || Math.abs(dy) > SNAP_DISTANCE) {
-          cursor.renderX += dx * LERP_FACTOR;
-          cursor.renderY += dy * LERP_FACTOR;
+        const target = normalizedToDocumentPixels(
+          cursor.nx,
+          cursor.ny,
+          boundsRef.current,
+        );
+        const deltaX = target.x - cursor.renderX;
+        const deltaY = target.y - cursor.renderY;
+
+        if (
+          Math.abs(deltaX) > SNAP_DISTANCE ||
+          Math.abs(deltaY) > SNAP_DISTANCE
+        ) {
+          cursor.renderX += deltaX * LERP_FACTOR;
+          cursor.renderY += deltaY * LERP_FACTOR;
           changed = true;
           continue;
         }
 
-        if (
-          cursor.renderX !== cursor.targetX ||
-          cursor.renderY !== cursor.targetY
-        ) {
-          cursor.renderX = cursor.targetX;
-          cursor.renderY = cursor.targetY;
+        if (cursor.renderX !== target.x || cursor.renderY !== target.y) {
+          cursor.renderX = target.x;
+          cursor.renderY = target.y;
           changed = true;
         }
       }
@@ -168,9 +206,9 @@ export function LiveCursorsLayer() {
   useEffect(() => {
     const updateBounds = () => {
       const next = measureDocumentBounds();
-      setBounds((prev) => {
-        if (prev.width === next.width && prev.height === next.height) {
-          return prev;
+      setBounds((previous) => {
+        if (previous.width === next.width && previous.height === next.height) {
+          return previous;
         }
         return next;
       });
@@ -198,21 +236,14 @@ export function LiveCursorsLayer() {
   }, []);
 
   const cursors = useMemo(() => {
-    const maxX = Math.max(0, bounds.width - 20);
-    const maxY = Math.max(0, bounds.height - 24);
-
-    return Array.from(animatedRef.current.values())
-      .filter(
-        (cursor) =>
-          cursor.targetX > HIDDEN_THRESHOLD &&
-          cursor.targetY > HIDDEN_THRESHOLD,
-      )
-      .map((cursor) => ({
-        ...cursor,
-        renderX: clamp(cursor.renderX, 0, maxX),
-        renderY: clamp(cursor.renderY, 0, maxY),
-      }));
-  }, [bounds.height, bounds.width, frame, version]);
+    return Array.from(animatedRef.current.values()).filter(
+      (cursor) =>
+        cursor.nx >= HIDDEN_THRESHOLD &&
+        cursor.ny >= HIDDEN_THRESHOLD &&
+        cursor.nx <= 1 &&
+        cursor.ny <= 1,
+    );
+  }, [frame, version]);
 
   if (cursors.length === 0) {
     return null;
@@ -227,29 +258,26 @@ export function LiveCursorsLayer() {
         width: "100%",
         height: `${bounds.height}px`,
         pointerEvents: "none",
+        overflow: "hidden",
         zIndex: 9999,
       }}
     >
       {cursors.map((cursor) => {
         const isCurrentPage = cursor.page === location.pathname;
-        console.log(cursor);
-
         return (
           <div
             key={cursor.id}
             style={{
               position: "absolute",
               transform: `translate3d(${cursor.renderX}px, ${cursor.renderY}px, 0)`,
-              opacity: isCurrentPage ? 1 : 0.25,
+              opacity: isCurrentPage ? 1 : 0.5,
               willChange: "transform",
             }}
           >
             <CursorArrow color={cursor.color} />
             <div
               className="absolute left-3 top-4 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold text-white shadow-[0_4px_12px_rgba(0,0,0,0.24)]"
-              style={{
-                backgroundColor: cursor.color,
-              }}
+              style={{ backgroundColor: cursor.color }}
             >
               {cursor.name} {!isCurrentPage && `(${cursor.page})`}
             </div>
