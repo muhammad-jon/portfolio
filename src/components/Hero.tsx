@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, CalendarCheck } from "lucide-react";
 import { Link } from "react-router-dom";
+import { RadioDiscPlayer } from "./RadioDiscPlayer";
 import { SocialLinks } from "./SocialLinks";
 
 const chips = [
@@ -22,34 +23,7 @@ export function Hero() {
         className="grid items-center gap-10 md:grid-cols-[220px_1fr]"
       >
         <div className="flex justify-center md:justify-start">
-          <div className="relative flex size-40 items-center justify-center rounded-full border border-line bg-gradient-to-br from-accent/30 via-surface to-slate-200 shadow-soft dark:to-slate-700">
-            <svg
-              width="82"
-              height="82"
-              viewBox="0 0 82 82"
-              fill="none"
-              aria-hidden="true"
-              className="opacity-70"
-            >
-              <circle
-                cx="41"
-                cy="41"
-                r="33"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              />
-              <path
-                d="M24 49C30 35 52 35 58 49"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              />
-              <circle cx="33" cy="34" r="2" fill="currentColor" />
-              <circle cx="49" cy="34" r="2" fill="currentColor" />
-            </svg>
-            <span className="absolute text-lg font-medium tracking-wide">
-              WC
-            </span>
-          </div>
+          <RadioDiscPlayer />
         </div>
 
         <div>

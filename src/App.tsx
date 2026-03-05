@@ -3,6 +3,7 @@ import { AnimatePresence } from "framer-motion";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Footer } from "./components/Footer";
 import { Navbar } from "./components/Navbar";
+import { RadioPlayerProvider } from "./context/RadioPlayerContext";
 import { About } from "./pages/About";
 import { Contact } from "./pages/Contact";
 import { Home } from "./pages/Home";
@@ -45,25 +46,27 @@ export default function App() {
   }, [isDark]);
 
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 -z-10"
-      >
-        <div className="absolute -left-24 top-[-12rem] h-[26rem] w-[26rem] rounded-full bg-accent/10 blur-3xl" />
-        <div className="absolute -right-16 top-[22rem] h-[22rem] w-[22rem] rounded-full bg-accent/10 blur-3xl" />
+    <RadioPlayerProvider>
+      <div className="relative flex min-h-screen flex-col">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none fixed inset-0 -z-10"
+        >
+          <div className="absolute -left-24 top-[-12rem] h-[26rem] w-[26rem] rounded-full bg-accent/10 blur-3xl" />
+          <div className="absolute -right-16 top-[22rem] h-[22rem] w-[22rem] rounded-full bg-accent/10 blur-3xl" />
+        </div>
+
+        <Navbar
+          isDark={isDark}
+          onToggleTheme={() => setIsDark((prev) => !prev)}
+        />
+
+        <main className="flex-1 pt-24">
+          <AppRoutes />
+        </main>
+
+        <Footer />
       </div>
-
-      <Navbar
-        isDark={isDark}
-        onToggleTheme={() => setIsDark((prev) => !prev)}
-      />
-
-      <main className="flex-1 pt-24">
-        <AppRoutes />
-      </main>
-
-      <Footer />
-    </div>
+    </RadioPlayerProvider>
   );
 }

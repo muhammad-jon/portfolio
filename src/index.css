@@ -45,6 +45,15 @@ h4 {
   background: hsl(var(--accent) / 0.26);
 }
 
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @layer components {
   .container-main {
     @apply mx-auto w-full max-w-[1100px] px-5 md:px-8;
@@ -56,5 +65,11 @@ h4 {
 
   .focus-ring {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-page;
+  }
+}
+
+@layer utilities {
+  .animate-spin-slow {
+    animation: spinSlow 7.2s linear infinite;
   }
 }
