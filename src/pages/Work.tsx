@@ -37,14 +37,18 @@ export function Work() {
       className="container-main pb-16 md:pb-24"
     >
       <header className="mb-6">
-        <h1 className="text-4xl md:text-5xl">Works</h1>
+        <h1 className="text-4xl md:text-5xl">Work</h1>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted md:text-base">
-          Selected product and interface work across startups, SaaS tools, and internal platforms.
+          Selected product and interface work across startups, SaaS tools, and
+          internal platforms.
         </p>
       </header>
 
       <div className="panel p-4 md:p-5">
-        <label htmlFor="projects-search" className="mb-2 block text-sm text-muted">
+        <label
+          htmlFor="projects-search"
+          className="mb-2 block text-sm text-muted"
+        >
           Search by company, role, project, or tag
         </label>
         <div className="relative">
@@ -72,15 +76,23 @@ export function Work() {
                 <li key={item.id} className="px-5 py-4">
                   <div className="grid gap-2 sm:grid-cols-[1.2fr_1fr_auto] sm:gap-4">
                     <p className="text-base">{item.company}</p>
-                    <p className="text-sm text-muted sm:text-base">{item.role}</p>
-                    <p className="text-sm text-muted sm:text-right">{item.years}</p>
+                    <p className="text-sm text-muted sm:text-base">
+                      {item.role}
+                    </p>
+                    <p className="text-sm text-muted sm:text-right">
+                      {item.years}
+                    </p>
                   </div>
-                  <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted">{item.summary}</p>
+                  <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted">
+                    {item.summary}
+                  </p>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="px-5 py-6 text-sm text-muted">No matching items found.</p>
+            <p className="px-5 py-6 text-sm text-muted">
+              No matching items found.
+            </p>
           )}
         </div>
       </section>
@@ -93,10 +105,16 @@ export function Work() {
               <li key={item.id} className="px-5 py-4">
                 <div className="grid gap-2 sm:grid-cols-[1.4fr_1fr_auto] sm:gap-4">
                   <p className="text-base">{item.degree}</p>
-                  <p className="text-sm text-muted sm:text-base">{item.institution}</p>
-                  <p className="text-sm text-muted sm:text-right">{item.years}</p>
+                  <p className="text-sm text-muted sm:text-base">
+                    {item.institution}
+                  </p>
+                  <p className="text-sm text-muted sm:text-right">
+                    {item.years}
+                  </p>
                 </div>
-                <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted">{item.details}</p>
+                <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted">
+                  {item.details}
+                </p>
               </li>
             ))}
           </ul>
@@ -112,7 +130,9 @@ export function Work() {
                 <h3 className="text-lg">{project.title}</h3>
                 <p className="text-sm text-muted">{project.year}</p>
               </div>
-              <p className="text-sm leading-relaxed text-muted">{project.description}</p>
+              <p className="text-sm leading-relaxed text-muted">
+                {project.description}
+              </p>
               <ul className="mt-4 flex flex-wrap gap-2">
                 {project.tags.map((tag) => (
                   <li

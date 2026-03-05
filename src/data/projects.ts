@@ -1,3 +1,5 @@
+import okeybo from "../assets/projects/okeybo.png";
+import pixeltech from "../assets/projects/pixeltech.png";
 import project1 from "../assets/projects/project-1.svg";
 import project2 from "../assets/projects/project-2.svg";
 import project3 from "../assets/projects/project-3.svg";
@@ -16,28 +18,36 @@ export type ProjectItem = {
 
 export const projects: ProjectItem[] = [
   {
-    id: "smartbase-ai-analytics",
-    title: "AI Analytics Platform",
-    imageSrc: project1,
-    href: "https://example.com/smartbase-ai-analytics",
-    github: "https://github.com/example/smartbase-ai-analytics",
+    id: "okeybo-ai-health-platform",
+    title: "OkeyBo AI Health Assistant",
+    imageSrc: okeybo,
+    href: "https://okeybo.uz/uz",
+    github: "",
     year: 2025,
     description:
-      "AI-driven platform for automated data collection and facial recognition analytics with dynamic dashboards.",
-    tags: ["React", "TypeScript", "React Query", "ApexCharts"],
-    link: "https://example.com/smartbase-ai-analytics",
+      "AI-powered health assistant platform designed to help users quickly analyze symptoms and receive preliminary guidance before visiting a doctor. The platform provides fast AI triage, health recommendations, and an intuitive interface focused on accessibility and speed.",
+    tags: ["React", "TypeScript", "Next.js", "Tailwind CSS"],
+    link: "https://okeybo.uz/uz",
   },
   {
-    id: "realtime-chat-voice",
-    title: "Real-time Chat & Voice",
-    imageSrc: project2,
-    href: "https://example.com/realtime-chat-voice",
-    github: "https://github.com/example/realtime-chat-voice",
+    id: "pixeltech-website",
+    title: "PixelTech IT Company Website",
+    imageSrc: pixeltech,
+    href: "http://pixeltech.uz/",
+    github: "",
     year: 2025,
     description:
-      "WebSocket chat and WebRTC-based voice communication with authentication and backend API integration.",
-    tags: ["Socket.IO", "WebRTC", "Authentication", "React"],
-    link: "https://example.com/realtime-chat-voice",
+      "Corporate website for an IT services company showcasing software development solutions, company portfolio, and services. Built with a modern responsive interface focused on clear service presentation, performance, and user-friendly navigation.",
+    tags: [
+      "React",
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Corporate Website",
+      "UI/UX",
+      "Responsive Design",
+    ],
+    link: "http://pixeltech.uz/",
   },
   {
     id: "ssbrok-customs",
@@ -58,7 +68,8 @@ export const projects: ProjectItem[] = [
     href: "https://example.com/sap-crm-integration",
     github: "https://github.com/example/sap-crm-integration",
     year: 2024,
-    description: "Enterprise integration platform with role-based access for 8 different user roles.",
+    description:
+      "Enterprise integration platform with role-based access for 8 different user roles.",
     tags: ["React", "Enterprise", "Role-based Access"],
     link: "https://example.com/sap-crm-integration",
   },
