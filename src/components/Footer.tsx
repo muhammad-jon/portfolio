@@ -10,7 +10,7 @@ export function Footer() {
   return (
     <footer className="border-t border-line/70">
       <div className="container-main flex flex-col items-center justify-between gap-3 py-6 text-sm text-muted sm:flex-row">
-        <p>(c) {year} Muxammad O'rolov</p>
+        <p>(c) {year} Muhammad O'rolov</p>
         <ul className="flex items-center gap-4">
           {socials.map((social) => (
             <li key={social.label}>

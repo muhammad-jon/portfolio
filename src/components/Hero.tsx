@@ -3,7 +3,14 @@ import { ArrowRight, CalendarCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SocialLinks } from "./SocialLinks";
 
-const chips = ["React", "TypeScript", "Next.js", "React Query", "Socket.IO", "Tailwind CSS"];
+const chips = [
+  "React",
+  "TypeScript",
+  "Next.js",
+  "React Query",
+  "Socket.IO",
+  "Tailwind CSS",
+];
 
 export function Hero() {
   return (
@@ -24,23 +31,38 @@ export function Hero() {
               aria-hidden="true"
               className="opacity-70"
             >
-              <circle cx="41" cy="41" r="33" stroke="currentColor" strokeWidth="1.5" />
-              <path d="M24 49C30 35 52 35 58 49" stroke="currentColor" strokeWidth="1.5" />
+              <circle
+                cx="41"
+                cy="41"
+                r="33"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              />
+              <path
+                d="M24 49C30 35 52 35 58 49"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              />
               <circle cx="33" cy="34" r="2" fill="currentColor" />
               <circle cx="49" cy="34" r="2" fill="currentColor" />
             </svg>
-            <span className="absolute text-lg font-medium tracking-wide">WC</span>
+            <span className="absolute text-lg font-medium tracking-wide">
+              WC
+            </span>
           </div>
         </div>
 
         <div>
-          <p className="mb-3 text-sm uppercase tracking-[0.2em] text-muted">Muxammad O'rolov</p>
+          <p className="mb-3 text-sm uppercase tracking-[0.2em] text-muted">
+            Muhammad O'rolov
+          </p>
           <h1 className="max-w-3xl text-4xl leading-tight md:text-6xl">
             Frontend Developer with 3+ years building scalable React products.
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted md:text-lg">
-            I build AI-driven platforms, real-time communication systems, and role-based enterprise
-            solutions with a strong focus on performance and maintainable code.
+            I build AI-driven platforms, real-time communication systems, and
+            role-based enterprise solutions with a strong focus on performance
+            and maintainable code.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
