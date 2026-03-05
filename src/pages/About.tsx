@@ -40,10 +40,17 @@ export function About() {
     >
       <header className="max-w-3xl">
         <h1 className="text-4xl md:text-5xl">About</h1>
+        <img
+          src="https://avatars.githubusercontent.com/u/75540900?v=4"
+          alt="Muhammad O'rolov profile photo"
+          className="mt-5 h-32 w-32 rounded-full border-2 border-line bg-surface object-cover shadow-soft md:h-48 md:w-48"
+          loading="eager"
+          referrerPolicy="no-referrer"
+        />
         <p className="mt-4 text-base leading-relaxed text-muted md:text-lg">
-          I am a frontend developer based in Tashkent, Uzbekistan. I enjoy building fast and
-          reliable interfaces, solving performance bottlenecks, and improving UX through clean and
-          maintainable code.
+          I am a frontend developer based in Tashkent, Uzbekistan. I enjoy
+          building fast and reliable interfaces, solving performance
+          bottlenecks, and improving UX through clean and maintainable code.
         </p>
       </header>
 
@@ -66,7 +73,10 @@ export function About() {
         <div className="panel mt-4">
           <ul className="divide-y divide-line/80">
             {highlights.map((item) => (
-              <li key={item} className="px-5 py-4 text-sm leading-relaxed text-muted md:text-base">
+              <li
+                key={item}
+                className="px-5 py-4 text-sm leading-relaxed text-muted md:text-base"
+              >
                 {item}
               </li>
             ))}
