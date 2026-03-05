@@ -16,13 +16,13 @@ export function ProjectCard({ project }: ProjectCardProps) {
         aria-label={`Open ${project.title} demo`}
         whileHover={{ y: -2 }}
         transition={{ duration: 0.28, ease: "easeOut" }}
-        className="p-2 focus-ring block overflow-hidden rounded-lg border border-white/10 bg-zinc-900/70 shadow-[0_14px_34px_-24px_rgba(15,23,42,0.75)] backdrop-blur-sm transition-shadow duration-300 hover:shadow-[0_24px_50px_-26px_rgba(15,23,42,0.9)]"
+        className="p-2 focus-ring block overflow-hidden rounded-lg border border-line/80 bg-surface/85 shadow-[0_14px_34px_-24px_hsl(220_35%_12%_/_0.35)] backdrop-blur-sm transition-shadow duration-300 hover:shadow-[0_24px_50px_-26px_hsl(220_35%_12%_/_0.45)] dark:border-white/10 dark:bg-zinc-900/70 dark:shadow-[0_14px_34px_-24px_rgba(15,23,42,0.75)] dark:hover:shadow-[0_24px_50px_-26px_rgba(15,23,42,0.9)]"
       >
-        <div className="flex items-center justify-between bg-zinc-900/70 px-0 pb-2 backdrop-blur-md">
+        <div className="flex items-center justify-between bg-surface/80 px-0 pb-2 backdrop-blur-md dark:bg-zinc-900/70">
           <div className="flex items-center gap-2 " aria-hidden="true">
-            <span className="h-2.5 w-2.5 rounded-full bg-white/10 transition group-hover:bg-red-400/95" />
-            <span className="h-2.5 w-2.5 rounded-full bg-white/10 transition group-hover:bg-amber-300/95" />
-            <span className="h-2.5 w-2.5 rounded-full bg-white/10 transition group-hover:bg-emerald-400/95" />
+            <span className="h-2.5 w-2.5 rounded-full bg-line transition group-hover:bg-red-400/95 dark:bg-white/10" />
+            <span className="h-2.5 w-2.5 rounded-full bg-line transition group-hover:bg-amber-300/95 dark:bg-white/10" />
+            <span className="h-2.5 w-2.5 rounded-full bg-line transition group-hover:bg-emerald-400/95 dark:bg-white/10" />
           </div>
         </div>
 
@@ -35,12 +35,12 @@ export function ProjectCard({ project }: ProjectCardProps) {
           />
         </div>
         <div className="absolute bottom-0 left-0 w-full px-10">
-          <div className="backdrop-blur-md border-t border-l  border-r border-white/10 rounded-t-lg px-2 py-1 bottom-0 bg-zinc-900/70">
+          <div className="backdrop-blur-md border-t border-l border-r border-line/80 rounded-t-lg px-2 py-1 bottom-0 bg-surface/90 dark:border-white/10 dark:bg-zinc-900/70">
             <div className="flex justify-between itmes-center">
               <h4 className="text-base">{project.title}</h4>
               <span
                 aria-hidden="true"
-                className="inline-flex h-5 w-5 rounded-full items-center justify-center border border-white/15 bg-white/5 text-slate-100/85"
+                className="inline-flex h-5 w-5 rounded-full items-center justify-center border border-line/80 bg-page/70 text-text/80 dark:border-white/15 dark:bg-white/5 dark:text-slate-100/85"
               >
                 <ArrowRight
                   size={14}
