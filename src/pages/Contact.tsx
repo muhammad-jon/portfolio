@@ -25,7 +25,9 @@ export function Contact() {
     return () => window.clearTimeout(timer);
   }, [sent]);
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = event.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
@@ -54,11 +56,11 @@ export function Contact() {
           <ul className="mt-6 space-y-3 text-sm">
             <li>
               <a
-                href="mailto:hello@webcode.dev"
+                href="mailto:memuhammadjon@gmail.com"
                 className="focus-ring inline-flex items-center gap-2 text-muted transition hover:text-text"
               >
                 <Mail size={16} />
-                hello@webcode.dev
+                memuhammadjon@gmail.com
               </a>
             </li>
             <li>
@@ -120,7 +122,10 @@ export function Contact() {
             </div>
 
             <div>
-              <label htmlFor="message" className="mb-1 block text-sm text-muted">
+              <label
+                htmlFor="message"
+                className="mb-1 block text-sm text-muted"
+              >
                 Message
               </label>
               <textarea
