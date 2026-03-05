@@ -15,15 +15,32 @@ const initialForm: FormState = {
   message: "",
 };
 
+const TELEGRAM_CHAT_ID = "419392080";
+const TELEGRAM_BOT_TOKEN =
+  (import.meta as ImportMeta & { env: Record<string, string | undefined> }).env
+    .TELEGRAM_BOT_TOKEN ?? "";
+
 export function Contact() {
   const [form, setForm] = useState<FormState>(initialForm);
   const [sent, setSent] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const isFormFilled =
+    form.name.trim().length > 0 &&
+    form.email.trim().length > 0 &&
+    form.message.trim().length > 0;
 
   useEffect(() => {
     if (!sent) return;
     const timer = window.setTimeout(() => setSent(false), 2200);
     return () => window.clearTimeout(timer);
   }, [sent]);
+
+  useEffect(() => {
+    if (!error) return;
+    const timer = window.setTimeout(() => setError(null), 2800);
+    return () => window.clearTimeout(timer);
+  }, [error]);
 
   const handleChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -32,10 +49,60 @@ export function Contact() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSent(true);
-    setForm(initialForm);
+
+    if (!isFormFilled) {
+      setError("Iltimos, barcha maydonlarni to'ldiring.");
+      return;
+    }
+
+    if (!TELEGRAM_BOT_TOKEN) {
+      setError("TELEGRAM_BOT_TOKEN topilmadi (.env ni tekshiring).");
+      return;
+    }
+
+    setIsSending(true);
+    setError(null);
+
+    const text = [
+      "Portfolio contact form",
+      "",
+      `Name: ${form.name.trim()}`,
+      `Email: ${form.email.trim()}`,
+      "Message:",
+      form.message.trim(),
+    ].join("\n");
+
+    try {
+      const response = await fetch(
+        `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text,
+            disable_web_page_preview: true,
+          }),
+        },
+      );
+
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok || payload?.ok !== true) {
+        setError("Xabar yuborilmadi. Token yoki bot permissionni tekshiring.");
+        return;
+      }
+
+      setSent(true);
+      setForm(initialForm);
+    } catch (_error) {
+      setError("Telegram bilan aloqa bo'lmadi. Qayta urinib ko'ring.");
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -117,7 +184,7 @@ export function Contact() {
 
             <div>
               <label htmlFor="email" className="mb-1 block text-sm text-muted">
-                Email
+                Email or Phone
               </label>
               <input
                 id="email"
@@ -150,9 +217,10 @@ export function Contact() {
 
             <button
               type="submit"
-              className="focus-ring inline-flex items-center gap-2 rounded-full bg-text px-5 py-3 text-sm font-medium text-page transition hover:opacity-90"
+              disabled={isSending || !isFormFilled}
+              className="focus-ring inline-flex items-center gap-2 rounded-full bg-text px-5 py-3 text-sm font-medium text-page transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Send message
+              {isSending ? "Sending..." : "Send message"}
               <Send size={16} />
             </button>
           </form>
@@ -169,7 +237,22 @@ export function Contact() {
             exit={{ opacity: 0, y: 8 }}
             className="fixed bottom-6 right-6 rounded-xl border border-line bg-surface px-4 py-3 text-sm shadow-soft"
           >
-            Sent (demo)
+            Sent
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            role="status"
+            aria-live="polite"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            className="fixed bottom-6 left-6 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700 shadow-soft dark:border-red-700/60 dark:bg-red-900/30 dark:text-red-100"
+          >
+            {error}
           </motion.div>
         )}
       </AnimatePresence>
