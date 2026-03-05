@@ -40,13 +40,23 @@ export function About() {
     >
       <header className="max-w-3xl">
         <h1 className="text-4xl md:text-5xl">About</h1>
-        <img
-          src="https://avatars.githubusercontent.com/u/75540900?v=4"
-          alt="Muhammad O'rolov profile photo"
-          className="mt-5 h-32 w-32 rounded-full border-2 border-line bg-surface object-cover shadow-soft md:h-48 md:w-48"
-          loading="eager"
-          referrerPolicy="no-referrer"
-        />
+        <div className="group relative mt-5 inline-block overflow-hidden rounded-full shadow-soft">
+          <img
+            src="https://avatars.githubusercontent.com/u/75540900?v=4"
+            alt="Muhammad O'rolov profile photo"
+            className="h-32 w-32 rounded-full border-2 border-line bg-surface object-cover transition-transform duration-500 group-hover:scale-[1.02] md:h-48 md:w-48"
+            loading="eager"
+            referrerPolicy="no-referrer"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 rounded-full border-2 border-white/35 bg-white/10 opacity-0 transition-opacity duration-500 group-hover:opacity-100 dark:border-white/20 dark:bg-white/10"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 rounded-full bg-[linear-gradient(115deg,transparent_32%,rgba(255,255,255,0.52)_50%,transparent_68%)] opacity-0 transition-[opacity,transform] duration-700 -translate-x-[120%] group-hover:translate-x-[120%] group-hover:opacity-100"
+          />
+        </div>
         <p className="mt-4 text-base leading-relaxed text-muted md:text-lg">
           I am a frontend developer based in Tashkent, Uzbekistan. I enjoy
           building fast and reliable interfaces, solving performance
