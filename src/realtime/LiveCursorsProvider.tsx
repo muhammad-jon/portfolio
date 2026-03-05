@@ -7,25 +7,26 @@ import {
   useRef,
   type ReactNode,
 } from "react";
-import { socket } from "./socket";
+import { persistSessionId, socket } from "./socket";
 import type {
   CursorLeavePayload,
   CursorMovePayload,
   CursorSnapshot,
   CursorStatePayload,
   CursorUpdatePayload,
-  LiveCursorStore,
+  LiveCursorsStore,
+  SelfIdentity,
+  SessionPayload,
 } from "./types";
 
-const SEND_RATE_HZ = 12;
-const SEND_INTERVAL_MS = 1000 / SEND_RATE_HZ;
-const STALE_TIMEOUT_MS = 10_000;
+const THROTTLE_MS = Math.floor(1000 / 12);
+const STALE_MS = 10_000;
 const STALE_SWEEP_MS = 2_000;
 const HIDDEN_COORD = -10_000;
 
-const LiveCursorContext = createContext<LiveCursorStore | null>(null);
+const LiveCursorsContext = createContext<LiveCursorsStore | null>(null);
 
-function didCursorChange(
+function hasCursorChanged(
   previous: CursorSnapshot | undefined,
   next: CursorSnapshot,
 ) {
@@ -35,12 +36,15 @@ function didCursorChange(
     previous.y !== next.y ||
     previous.page !== next.page ||
     previous.name !== next.name ||
-    previous.color !== next.color
+    previous.color !== next.color ||
+    previous.sessionId !== next.sessionId ||
+    previous.ts !== next.ts
   );
 }
 
-function subscribeToPathnameChange(onChange: (pathname: string) => void) {
-  const notify = () => onChange(window.location.pathname);
+function subscribeToPathChanges(onPathChange: (pathname: string) => void) {
+  const notify = () => onPathChange(window.location.pathname);
+
   const originalPushState = window.history.pushState;
   const originalReplaceState = window.history.replaceState;
 
@@ -73,16 +77,18 @@ function subscribeToPathnameChange(onChange: (pathname: string) => void) {
   };
 }
 
-export function LiveCursorProvider({ children }: { children: ReactNode }) {
+export function LiveCursorsProvider({ children }: { children: ReactNode }) {
   const cursorsRef = useRef(new Map<string, CursorSnapshot>());
   const listenersRef = useRef(new Set<() => void>());
   const versionRef = useRef(0);
-  const pointerRef = useRef<{ x: number; y: number } | null>(null);
+  const selfRef = useRef<SelfIdentity | null>(null);
+  const pointerClientRef = useRef<{ x: number; y: number } | null>(null);
   const pointerInsideRef = useRef(false);
-  const pendingUpdateRef = useRef(false);
-  const currentPathRef = useRef(
+  const pathRef = useRef(
     typeof window === "undefined" ? "/" : window.location.pathname,
   );
+  const lastSentAtRef = useRef(0);
+  const throttleTimerRef = useRef<number | null>(null);
 
   const notify = useCallback(() => {
     versionRef.current += 1;
@@ -91,9 +97,15 @@ export function LiveCursorProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const clearThrottleTimer = useCallback(() => {
+    if (throttleTimerRef.current === null) return;
+    window.clearTimeout(throttleTimerRef.current);
+    throttleTimerRef.current = null;
+  }, []);
+
   const upsertCursor = useCallback(
     (payload: CursorMovePayload) => {
-      if (!payload?.id) return;
+      if (!payload?.id || payload.id === socket.id) return;
 
       const next: CursorSnapshot = {
         ...payload,
@@ -102,7 +114,7 @@ export function LiveCursorProvider({ children }: { children: ReactNode }) {
 
       const previous = cursorsRef.current.get(payload.id);
       cursorsRef.current.set(payload.id, next);
-      if (!didCursorChange(previous, next)) return;
+      if (!hasCursorChanged(previous, next)) return;
       notify();
     },
     [notify],
@@ -116,40 +128,81 @@ export function LiveCursorProvider({ children }: { children: ReactNode }) {
     [notify],
   );
 
-  const clearCursors = useCallback(() => {
-    if (cursorsRef.current.size === 0) return;
-    cursorsRef.current.clear();
-    notify();
-  }, [notify]);
-
-  const emitCursorUpdate = useCallback(() => {
+  const emitCursorUpdate = useCallback((forceHidden = false) => {
     if (!socket.connected) return;
 
-    let x = HIDDEN_COORD;
-    let y = HIDDEN_COORD;
-    if (pointerInsideRef.current && pointerRef.current) {
-      x = pointerRef.current.x;
-      y = pointerRef.current.y;
-    }
+    const pointer = pointerClientRef.current;
+    const isVisible = !forceHidden && pointerInsideRef.current && Boolean(pointer);
+
+    const x = isVisible && pointer ? pointer.x + window.scrollX : HIDDEN_COORD;
+    const y = isVisible && pointer ? pointer.y + window.scrollY : HIDDEN_COORD;
+    const ts = Date.now();
 
     const payload: CursorUpdatePayload = {
       x,
       y,
-      page: currentPathRef.current,
+      page: pathRef.current,
+      ts,
     };
 
     socket.emit("cursor:update", payload);
+    lastSentAtRef.current = ts;
   }, []);
+
+  const scheduleCursorUpdate = useCallback(
+    (options?: { force?: boolean; hidden?: boolean }) => {
+      const force = Boolean(options?.force);
+      const hidden = Boolean(options?.hidden);
+
+      if (force) {
+        clearThrottleTimer();
+        emitCursorUpdate(hidden);
+        return;
+      }
+
+      const elapsed = Date.now() - lastSentAtRef.current;
+      if (elapsed >= THROTTLE_MS) {
+        clearThrottleTimer();
+        emitCursorUpdate(hidden);
+        return;
+      }
+
+      if (throttleTimerRef.current !== null) {
+        return;
+      }
+
+      const waitMs = THROTTLE_MS - elapsed;
+      throttleTimerRef.current = window.setTimeout(() => {
+        throttleTimerRef.current = null;
+        emitCursorUpdate(hidden);
+      }, waitMs);
+    },
+    [clearThrottleTimer, emitCursorUpdate],
+  );
 
   useEffect(() => {
     if (!socket.connected) {
       socket.connect();
     }
 
-    const handleState = (state: CursorStatePayload) => {
+    const handleSession = (payload: SessionPayload) => {
+      if (!payload?.sessionId) return;
+
+      const nextSelf: SelfIdentity = {
+        sessionId: payload.sessionId,
+        name: payload.name,
+        color: payload.color,
+      };
+
+      persistSessionId(payload.sessionId);
+      selfRef.current = nextSelf;
+      notify();
+    };
+
+    const handleState = (payload: CursorStatePayload) => {
       const nextMap = new Map<string, CursorSnapshot>();
-      for (const cursor of state) {
-        if (!cursor?.id) continue;
+      for (const cursor of payload) {
+        if (!cursor?.id || cursor.id === socket.id) continue;
         nextMap.set(cursor.id, {
           ...cursor,
           lastSeen: Date.now(),
@@ -158,10 +211,9 @@ export function LiveCursorProvider({ children }: { children: ReactNode }) {
 
       const previous = cursorsRef.current;
       let changed = previous.size !== nextMap.size;
-
       if (!changed) {
         for (const [id, cursor] of nextMap.entries()) {
-          if (didCursorChange(previous.get(id), cursor)) {
+          if (hasCursorChanged(previous.get(id), cursor)) {
             changed = true;
             break;
           }
@@ -174,42 +226,33 @@ export function LiveCursorProvider({ children }: { children: ReactNode }) {
       }
     };
 
-    const handleMove = (cursor: CursorMovePayload) => {
-      upsertCursor(cursor);
+    const handleMove = (payload: CursorMovePayload) => {
+      upsertCursor(payload);
     };
 
-    const handleLeave = ({ id }: CursorLeavePayload) => {
-      if (!id) return;
-      removeCursor(id);
+    const handleLeave = (payload: CursorLeavePayload) => {
+      if (!payload?.id) return;
+      removeCursor(payload.id);
     };
 
     const handleConnect = () => {
-      emitCursorUpdate();
-      pendingUpdateRef.current = false;
+      scheduleCursorUpdate({
+        force: true,
+        hidden: !pointerInsideRef.current || !pointerClientRef.current,
+      });
     };
 
-    const handleDisconnect = () => {
-      clearCursors();
-    };
-
+    socket.on("session", handleSession);
     socket.on("cursor:state", handleState);
     socket.on("cursor:move", handleMove);
     socket.on("cursor:leave", handleLeave);
     socket.on("connect", handleConnect);
-    socket.on("disconnect", handleDisconnect);
-
-    const sendTimer = window.setInterval(() => {
-      if (!pendingUpdateRef.current) return;
-      if (!socket.connected) return;
-      pendingUpdateRef.current = false;
-      emitCursorUpdate();
-    }, SEND_INTERVAL_MS);
 
     const staleTimer = window.setInterval(() => {
       const now = Date.now();
       let changed = false;
       for (const [id, cursor] of cursorsRef.current.entries()) {
-        if (now - cursor.lastSeen <= STALE_TIMEOUT_MS) continue;
+        if (now - cursor.lastSeen <= STALE_MS) continue;
         cursorsRef.current.delete(id);
         changed = true;
       }
@@ -219,55 +262,58 @@ export function LiveCursorProvider({ children }: { children: ReactNode }) {
     }, STALE_SWEEP_MS);
 
     return () => {
+      socket.off("session", handleSession);
       socket.off("cursor:state", handleState);
       socket.off("cursor:move", handleMove);
       socket.off("cursor:leave", handleLeave);
       socket.off("connect", handleConnect);
-      socket.off("disconnect", handleDisconnect);
-      window.clearInterval(sendTimer);
+      clearThrottleTimer();
       window.clearInterval(staleTimer);
       socket.disconnect();
-      pendingUpdateRef.current = false;
-      clearCursors();
     };
-  }, [clearCursors, emitCursorUpdate, notify, removeCursor, upsertCursor]);
+  }, [clearThrottleTimer, notify, removeCursor, scheduleCursorUpdate, upsertCursor]);
 
   useEffect(() => {
     const handlePointerMove = (event: PointerEvent) => {
       pointerInsideRef.current = true;
-      pointerRef.current = { x: event.clientX, y: event.clientY };
-      pendingUpdateRef.current = true;
+      pointerClientRef.current = { x: event.clientX, y: event.clientY };
+      scheduleCursorUpdate();
     };
 
     const handlePointerEnter = (event: PointerEvent) => {
       pointerInsideRef.current = true;
-      pointerRef.current = { x: event.clientX, y: event.clientY };
-      pendingUpdateRef.current = false;
-      emitCursorUpdate();
+      pointerClientRef.current = { x: event.clientX, y: event.clientY };
+      scheduleCursorUpdate({ force: true });
     };
 
     const handlePointerLeave = () => {
       pointerInsideRef.current = false;
-      pendingUpdateRef.current = false;
-      emitCursorUpdate();
+      scheduleCursorUpdate({ force: true, hidden: true });
+    };
+
+    const handleScroll = () => {
+      if (!pointerClientRef.current) return;
+      scheduleCursorUpdate();
     };
 
     const handleVisibilityChange = () => {
       if (document.visibilityState !== "hidden") return;
       pointerInsideRef.current = false;
-      pendingUpdateRef.current = false;
-      emitCursorUpdate();
+      scheduleCursorUpdate({ force: true, hidden: true });
     };
 
-    const unsubscribePath = subscribeToPathnameChange((pathname) => {
-      currentPathRef.current = pathname;
-      pendingUpdateRef.current = false;
-      emitCursorUpdate();
+    const unsubscribePath = subscribeToPathChanges((pathname) => {
+      pathRef.current = pathname;
+      scheduleCursorUpdate({
+        force: true,
+        hidden: !pointerInsideRef.current || !pointerClientRef.current,
+      });
     });
 
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
     window.addEventListener("pointerenter", handlePointerEnter, { passive: true });
     window.addEventListener("pointerleave", handlePointerLeave, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
@@ -275,11 +321,12 @@ export function LiveCursorProvider({ children }: { children: ReactNode }) {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerenter", handlePointerEnter);
       window.removeEventListener("pointerleave", handlePointerLeave);
+      window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [emitCursorUpdate]);
+  }, [scheduleCursorUpdate]);
 
-  const store = useMemo<LiveCursorStore>(() => {
+  const store = useMemo<LiveCursorsStore>(() => {
     return {
       subscribe(listener) {
         listenersRef.current.add(listener);
@@ -293,20 +340,23 @@ export function LiveCursorProvider({ children }: { children: ReactNode }) {
       getCursors() {
         return cursorsRef.current;
       },
+      getSelf() {
+        return selfRef.current;
+      },
     };
   }, []);
 
   return (
-    <LiveCursorContext.Provider value={store}>
+    <LiveCursorsContext.Provider value={store}>
       {children}
-    </LiveCursorContext.Provider>
+    </LiveCursorsContext.Provider>
   );
 }
 
-export function useLiveCursorStore() {
-  const context = useContext(LiveCursorContext);
+export function useLiveCursorsStore() {
+  const context = useContext(LiveCursorsContext);
   if (!context) {
-    throw new Error("useLiveCursorStore must be used within LiveCursorProvider");
+    throw new Error("useLiveCursorsStore must be used within LiveCursorsProvider");
   }
   return context;
 }

@@ -34,6 +34,11 @@ body {
     radial-gradient(circle at 92% 10%, hsl(var(--accent) / 0.1), transparent 30%);
 }
 
+#root {
+  position: relative;
+  min-height: 100%;
+}
+
 h1,
 h2,
 h3,
