@@ -146,7 +146,7 @@ export function Contact() {
                 rel="noreferrer"
                 className="focus-ring inline-flex items-center gap-2 text-muted transition hover:text-text"
               >
-                <MessageCircle size={16} />
+                <Send size={16} />
                 Telegram
               </a>
             </li>
