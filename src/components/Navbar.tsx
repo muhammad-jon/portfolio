@@ -1,5 +1,13 @@
 import { motion } from "framer-motion";
-import { Briefcase, Home, LayoutGrid, Mail, Moon, Sun, User } from "lucide-react";
+import {
+  Briefcase,
+  Home,
+  LayoutGrid,
+  Mail,
+  Moon,
+  Sun,
+  User,
+} from "lucide-react";
 import { useState, type FocusEvent } from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "../utils/cn";
@@ -90,7 +98,7 @@ export function Navbar({ isDark, onToggleTheme }: NavbarProps) {
           onClick={onToggleTheme}
           aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
           title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-          className="focus-ring pointer-events-auto absolute right-4 h-10 w-10 items-center justify-center rounded-full border border-line/80 bg-surface/75 text-muted shadow-soft backdrop-blur-xl transition hover:text-text inline-flex"
+          className="focus-ring pointer-events-auto fixed bottom-16 right-4 z-[60] inline-flex h-10 w-10 items-center justify-center rounded-full border border-line/80 bg-surface/75 text-muted shadow-soft backdrop-blur-xl transition hover:text-text md:absolute md:bottom-auto md:right-4 md:top-1/2 md:z-auto md:-translate-y-1/2"
         >
           {isDark ? <Sun size={16} /> : <Moon size={16} />}
         </button>
