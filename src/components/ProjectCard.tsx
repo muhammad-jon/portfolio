@@ -35,9 +35,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
           />
         </div>
         <div className="absolute bottom-0 left-0 w-full px-10">
-          <div className="backdrop-blur-md border-t border-l border-r border-line/80 rounded-t-lg px-2 py-1 bottom-0 bg-surface/90 dark:border-white/10 dark:bg-zinc-900/70">
+          <div className="backdrop-blur-md border-t border-l  border-r border-line/80 rounded-t-lg px-2 py-1 bottom-0 bg-surface/90 dark:border-white/10 dark:bg-zinc-900/70">
             <div className="flex justify-between itmes-center">
-              <h4 className="text-base">{project.title}</h4>
+              <h4 className="text-sm">{project.title}</h4>
               <span
                 aria-hidden="true"
                 className="inline-flex h-5 w-5 rounded-full items-center justify-center border border-line/80 bg-page/70 text-text/80 dark:border-white/15 dark:bg-white/5 dark:text-slate-100/85"

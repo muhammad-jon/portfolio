@@ -1,7 +1,8 @@
 import okeybo from "../assets/projects/okeybo.png";
 import pixeltech from "../assets/projects/pixeltech.png";
-import project1 from "../assets/projects/project-1.svg";
-import project2 from "../assets/projects/project-2.svg";
+import ssbrok from "../assets/projects/ssbrok.png";
+import turonmontessori from "../assets/projects/turonmontessori.png";
+import centrum from "../assets/projects/centrum.jpg";
 import project3 from "../assets/projects/project-3.svg";
 
 export type ProjectItem = {
@@ -50,40 +51,68 @@ export const projects: ProjectItem[] = [
     link: "http://pixeltech.uz/",
   },
   {
-    id: "ssbrok-customs",
-    title: "Customs Automation Platform",
-    imageSrc: project3,
-    href: "https://example.com/ssbrok-customs",
-    github: "https://github.com/example/ssbrok-customs",
-    year: 2024,
+    id: "ssbrok-client-dashboard",
+    title: "SSBrok Client Service Platform",
+    imageSrc: ssbrok,
+    href: "https://ssbrok.uz/",
+    github: "",
+    year: 2025,
     description:
-      "Customs workflow product that reduced processing time from days to hours with role-based navigation and live updates.",
-    tags: ["Role-based Access", "REST APIs", "Optimization"],
-    link: "https://example.com/ssbrok-customs",
+      "Web platform for managing and delivering services to clients through an integrated dashboard. The system allows users to access services, manage requests, and track their activities in a centralized interface designed for efficiency and ease of use.",
+    tags: [
+      "React",
+      "Next.js",
+      "Ant design",
+      "TypeScript",
+      "Tailwind CSS",
+      "Dashboard",
+      "Admin Panel",
+      "Client Management",
+      "Web Application",
+    ],
+    link: "https://ssbrok.uz/",
   },
   {
-    id: "sap-crm-integration",
-    title: "SAP + CRM Integration",
-    imageSrc: project1,
-    href: "https://example.com/sap-crm-integration",
-    github: "https://github.com/example/sap-crm-integration",
-    year: 2024,
+    id: "turon-montessori-landing",
+    title: "Turon Montessori Website",
+    imageSrc: turonmontessori,
+    href: "https://turonmontessori.uz/",
+    github: "",
+    year: 2025,
     description:
-      "Enterprise integration platform with role-based access for 8 different user roles.",
-    tags: ["React", "Enterprise", "Role-based Access"],
-    link: "https://example.com/sap-crm-integration",
+      "Landing website for a Montessori-based kindergarten designed to present educational programs, facilities, and enrollment information for parents. Built with two different landing page versions, featuring a responsive UI, SEO optimization, and a clean design aligned with Montessori principles for clarity and trust.",
+    tags: [
+      "React",
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Landing Page",
+      "Responsive Design",
+      "SEO Optimization",
+      "UI/UX",
+    ],
+    link: "https://turonmontessori.uz/",
   },
   {
-    id: "nextjs-ecommerce",
-    title: "Next.js eCommerce",
-    imageSrc: project2,
-    href: "https://example.com/nextjs-ecommerce",
-    github: "https://github.com/example/nextjs-ecommerce",
-    year: 2024,
+    id: "centrum-air-declaration-dashboard",
+    title: "Centrum Air Declaration Management Dashboard",
+    imageSrc: centrum,
+    href: "https://centrum.edithapis.uz/",
+    github: "",
+    year: 2025,
     description:
-      "eCommerce frontend built with Next.js and Sass, improving load performance by approximately 15%.",
-    tags: ["Next.js", "Sass", "Performance"],
-    link: "https://example.com/nextjs-ecommerce",
+      "Internal web dashboard for managing and approving passenger declarations for Centrum Air. The system provides administrators with tools to review submissions, approve or reject declarations, and monitor records through a structured interface. Built with a scalable architecture, responsive UI, and optimized data fetching using React Query.",
+    tags: [
+      "React",
+      "TypeScript",
+      "Material UI",
+      "React Query",
+      "Dashboard",
+      "Admin Panel",
+      "Data Management",
+      "Responsive Design",
+    ],
+    link: "https://centrum.edithapis.uz/",
   },
   {
     id: "expense-tracker-firebase",
