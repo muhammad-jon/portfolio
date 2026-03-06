@@ -4,19 +4,19 @@ import type { ProjectItem } from "../data/projects";
 
 interface ProjectCardProps {
   project: ProjectItem;
+  onOpen: (project: ProjectItem) => void;
 }
 
-export function ProjectCard({ project }: ProjectCardProps) {
+export function ProjectCard({ project, onOpen }: ProjectCardProps) {
   return (
     <article className="group">
-      <motion.a
-        href={project.href}
-        target="_blank"
-        rel="noreferrer"
-        aria-label={`Open ${project.title} demo`}
+      <motion.button
+        type="button"
+        onClick={() => onOpen(project)}
+        aria-label={`Open ${project.title} details`}
         whileHover={{ y: -2 }}
         transition={{ duration: 0.28, ease: "easeOut" }}
-        className="p-2 focus-ring block overflow-hidden rounded-lg border border-line/80 bg-surface/85 shadow-[0_14px_34px_-24px_hsl(220_35%_12%_/_0.35)] backdrop-blur-sm transition-shadow duration-300 hover:shadow-[0_24px_50px_-26px_hsl(220_35%_12%_/_0.45)] dark:border-white/10 dark:bg-zinc-900/70 dark:shadow-[0_14px_34px_-24px_rgba(15,23,42,0.75)] dark:hover:shadow-[0_24px_50px_-26px_rgba(15,23,42,0.9)]"
+        className="focus-ring relative block w-full overflow-hidden rounded-lg border border-line/80 bg-surface/85 p-2 text-left shadow-[0_14px_34px_-24px_hsl(220_35%_12%_/_0.35)] backdrop-blur-sm transition-shadow duration-300 hover:shadow-[0_24px_50px_-26px_hsl(220_35%_12%_/_0.45)] dark:border-white/10 dark:bg-zinc-900/70 dark:shadow-[0_14px_34px_-24px_rgba(15,23,42,0.75)] dark:hover:shadow-[0_24px_50px_-26px_rgba(15,23,42,0.9)]"
       >
         <div className="flex items-center justify-between bg-surface/80 px-0 pb-2 backdrop-blur-md dark:bg-zinc-900/70">
           <div className="flex items-center gap-2 " aria-hidden="true">
@@ -36,7 +36,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </div>
         <div className="absolute bottom-0 left-0 w-full px-10">
           <div className="backdrop-blur-md border-t border-l  border-r border-line/80 rounded-t-lg px-2 py-1 bottom-0 bg-surface/90 dark:border-white/10 dark:bg-zinc-900/70">
-            <div className="flex justify-between itmes-center">
+            <div className="flex items-center justify-between">
               <h4 className="text-sm">{project.title}</h4>
               <span
                 aria-hidden="true"
@@ -50,7 +50,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             </div>
           </div>
         </div>
-      </motion.a>
+      </motion.button>
     </article>
   );
 }

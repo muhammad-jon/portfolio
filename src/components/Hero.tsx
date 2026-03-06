@@ -48,7 +48,7 @@ export function Hero() {
               <ArrowRight size={16} />
             </Link>
             <a
-              href="https://cal.com/placeholder"
+              href="https://cal.com/muhammad-jon"
               target="_blank"
               rel="noreferrer"
               className="focus-ring inline-flex items-center gap-2 rounded-full border border-line bg-surface px-5 py-3 text-sm font-medium text-text transition hover:border-accent/60"

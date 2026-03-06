@@ -3,7 +3,8 @@ import pixeltech from "../assets/projects/pixeltech.png";
 import ssbrok from "../assets/projects/ssbrok.png";
 import turonmontessori from "../assets/projects/turonmontessori.png";
 import centrum from "../assets/projects/centrum.jpg";
-import project3 from "../assets/projects/project-3.svg";
+import speakify from "../assets/projects/speakify.png";
+import mesejebot from "../assets/projects/mesejebot.png";
 
 export type ProjectItem = {
   id: string;
@@ -18,6 +19,48 @@ export type ProjectItem = {
 };
 
 export const projects: ProjectItem[] = [
+  {
+    id: "speakify-voice-chat-platform",
+    title: "Speakify Real-Time Voice Communication Platform",
+    imageSrc: speakify,
+    href: "",
+    github: "",
+    year: 2026,
+    description:
+      "Real-time voice communication platform designed to connect users for instant conversations and language practice. The system supports live audio calls, user matching, and interactive communication features. Built with a scalable architecture, modern UI, and optimized state management to handle real-time interactions and dynamic user sessions.",
+    tags: [
+      "React",
+      "TypeScript",
+      "MUI",
+      "WebRTC",
+      "Real-time Communication",
+      "Socket.io",
+      "Voice Chat",
+      "Web Application",
+      "Dashboard",
+    ],
+    link: "https://t.me/speakify_bot",
+  },
+  {
+    id: "meseje-anonymous-messaging-bot",
+    title: "Meseje Topic-Based Anonymous Messaging Bot",
+    imageSrc: mesejebot,
+    href: "",
+    github: "",
+    year: 2026,
+    description:
+      "Anonymous messaging platform built as a Telegram bot that allows users to communicate within topic-based channels without revealing their identities. The system organizes conversations by topics, enabling structured discussions while maintaining user anonymity. Designed to handle real-time message routing, topic management, and scalable interaction between multiple users.",
+    tags: [
+      "Telegram Bot",
+      "Node.js",
+      "JavaScript",
+      "Anonymous Messaging",
+      "Real-time Communication",
+      "Chat System",
+      "Bot Development",
+    ],
+    link: "https://t.me/Mesejebot",
+  },
   {
     id: "okeybo-ai-health-platform",
     title: "OkeyBo AI Health Assistant",
@@ -113,17 +156,5 @@ export const projects: ProjectItem[] = [
       "Responsive Design",
     ],
     link: "https://centrum.edithapis.uz/",
-  },
-  {
-    id: "expense-tracker-firebase",
-    title: "Expense Tracker App",
-    imageSrc: project3,
-    href: "https://example.com/expense-tracker-firebase",
-    github: "https://github.com/example/expense-tracker-firebase",
-    year: 2023,
-    description:
-      "Expense tracking app with secure authentication and image-based records, built with React and Firebase.",
-    tags: ["React", "Firebase", "Authentication"],
-    link: "https://example.com/expense-tracker-firebase",
   },
 ];
