@@ -23,6 +23,11 @@ interface DocumentBounds {
   height: number;
 }
 
+interface ViewportOffset {
+  x: number;
+  y: number;
+}
+
 interface AnimatedCursor extends CursorSnapshot {
   renderX: number;
   renderY: number;
@@ -144,6 +149,12 @@ export function LiveCursorsLayer() {
       return { width: 1, height: 1 };
     }
     return measureDocumentBounds();
+  });
+  const [viewportOffset, setViewportOffset] = useState<ViewportOffset>(() => {
+    if (typeof window === "undefined") {
+      return { x: 0, y: 0 };
+    }
+    return { x: window.scrollX, y: window.scrollY };
   });
   const boundsRef = useRef(bounds);
 
@@ -282,6 +293,28 @@ export function LiveCursorsLayer() {
     };
   }, []);
 
+  useEffect(() => {
+    const updateViewportOffset = () => {
+      const nextX = window.scrollX;
+      const nextY = window.scrollY;
+      setViewportOffset((previous) => {
+        if (previous.x === nextX && previous.y === nextY) {
+          return previous;
+        }
+        return { x: nextX, y: nextY };
+      });
+    };
+
+    updateViewportOffset();
+    window.addEventListener("scroll", updateViewportOffset, { passive: true });
+    window.addEventListener("resize", updateViewportOffset);
+
+    return () => {
+      window.removeEventListener("scroll", updateViewportOffset);
+      window.removeEventListener("resize", updateViewportOffset);
+    };
+  }, []);
+
   const cursors = useMemo(() => {
     return Array.from(animatedRef.current.values()).filter(
       (cursor) =>
@@ -324,45 +357,53 @@ export function LiveCursorsLayer() {
     </button>
   );
 
+  const overlay =
+    isVisible && cursors.length > 0 ? (
+      <div
+        style={{
+          position: "fixed",
+          left: 0,
+          top: 0,
+          width: "100vw",
+          height: "100vh",
+          pointerEvents: "none",
+          overflow: "hidden",
+          zIndex: 9999,
+        }}
+      >
+        {cursors.map((cursor) => {
+          const isCurrentPage = cursor.page === location.pathname;
+          const viewportX = cursor.renderX - viewportOffset.x;
+          const viewportY = cursor.renderY - viewportOffset.y;
+
+          return (
+            <div
+              key={cursor.id}
+              style={{
+                position: "absolute",
+                transform: `translate3d(${viewportX}px, ${viewportY}px, 0)`,
+                opacity: isCurrentPage ? 1 : 0.5,
+                willChange: "transform",
+              }}
+            >
+              <CursorArrow color={cursor.color} />
+              <div
+                className="absolute left-3 top-4 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold text-white shadow-[0_4px_12px_rgba(0,0,0,0.24)]"
+                style={{ backgroundColor: cursor.color }}
+              >
+                {cursor.name} {!isCurrentPage && `(${cursor.page})`}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    ) : null;
+
   return (
     <>
-      {isVisible && cursors.length > 0 ? (
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            top: 0,
-            width: "100%",
-            height: `${bounds.height}px`,
-            pointerEvents: "none",
-            overflow: "hidden",
-            zIndex: 9999,
-          }}
-        >
-          {cursors.map((cursor) => {
-            const isCurrentPage = cursor.page === location.pathname;
-            return (
-              <div
-                key={cursor.id}
-                style={{
-                  position: "absolute",
-                  transform: `translate3d(${cursor.renderX}px, ${cursor.renderY}px, 0)`,
-                  opacity: isCurrentPage ? 1 : 0.5,
-                  willChange: "transform",
-                }}
-              >
-                <CursorArrow color={cursor.color} />
-                <div
-                  className="absolute left-3 top-4 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold text-white shadow-[0_4px_12px_rgba(0,0,0,0.24)]"
-                  style={{ backgroundColor: cursor.color }}
-                >
-                  {cursor.name} {!isCurrentPage && `(${cursor.page})`}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ) : null}
+      {typeof document !== "undefined"
+        ? createPortal(overlay, document.body)
+        : overlay}
       {typeof document !== "undefined"
         ? createPortal(toggleButton, document.body)
         : toggleButton}
