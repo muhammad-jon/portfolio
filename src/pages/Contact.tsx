@@ -1,6 +1,6 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Linkedin, Mail, MessageCircle, Phone, Send } from "lucide-react";
+import { Linkedin, Mail, Phone, Send } from "lucide-react";
 import { SocialLinks } from "../components/SocialLinks";
 
 type FormState = {
