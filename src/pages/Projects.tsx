@@ -4,6 +4,25 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ProjectCard } from "../components/ProjectCard";
 import { projects, type ProjectItem } from "../data/projects";
 
+const projectSections: Array<{
+  category: ProjectItem["category"];
+  title: string;
+  description: string;
+}> = [
+  {
+    category: "personal",
+    title: "Personal Projects",
+    description:
+      "Independent products I planned, designed, and shipped on my own.",
+  },
+  {
+    category: "professional",
+    title: "Professional Projects",
+    description:
+      "Products and client platforms I contributed to during professional work.",
+  },
+];
+
 export function Projects() {
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(
     null,
@@ -91,18 +110,45 @@ export function Projects() {
         <header className="mb-7">
           <h1 className="text-4xl md:text-5xl">Projects</h1>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted md:text-base">
-            Selected frontend work with a premium minimal interface style.
+            A split view of independent builds and projects shaped through client
+            and product work.
           </p>
         </header>
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              onOpen={handleOpenProject}
-            />
-          ))}
+        <div className="space-y-10">
+          {projectSections.map((section) => {
+            const sectionProjects = projects.filter(
+              (project) => project.category === section.category,
+            );
+
+            if (!sectionProjects.length) return null;
+
+            return (
+              <section key={section.category} className="space-y-5">
+                <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                  <div>
+                    <h2 className="text-2xl md:text-3xl">{section.title}</h2>
+                    <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted md:text-base">
+                      {section.description}
+                    </p>
+                  </div>
+                  <span className="w-fit rounded-full border border-line/80 bg-surface px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-muted dark:border-white/10 dark:bg-zinc-900/70">
+                    {sectionProjects.length} projects
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+                  {sectionProjects.map((project) => (
+                    <ProjectCard
+                      key={project.id}
+                      project={project}
+                      onOpen={handleOpenProject}
+                    />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
         </div>
       </motion.section>
 

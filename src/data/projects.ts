@@ -10,10 +10,15 @@ import turonmontessori3 from "../assets/projects/turonmontessori3.png";
 import centrum from "../assets/projects/centrum.jpg";
 import speakify from "../assets/projects/speakify.png";
 import mesejebot from "../assets/projects/mesejebot.png";
+import smaktab from "../assets/projects/smaktab.png";
+import smaktab1 from "../assets/projects/smaktab1.png";
+import smaktab2 from "../assets/projects/smaktab2.png";
+import smaktab3 from "../assets/projects/smaktab3.png";
 
 export type ProjectItem = {
   id: string;
   title: string;
+  category: "personal" | "professional";
   imageSrc: string[];
   href: string;
   github?: string;
@@ -27,6 +32,7 @@ export const projects: ProjectItem[] = [
   {
     id: "speakify-voice-chat-platform",
     title: "Speakify Real-Time Voice Communication Platform",
+    category: "personal",
     imageSrc: [speakify],
     href: "",
     github: "",
@@ -49,6 +55,7 @@ export const projects: ProjectItem[] = [
   {
     id: "meseje-anonymous-messaging-bot",
     title: "Meseje Topic-Based Anonymous Messaging Bot",
+    category: "personal",
     imageSrc: [mesejebot],
     href: "",
     github: "",
@@ -69,6 +76,7 @@ export const projects: ProjectItem[] = [
   {
     id: "okeybo-ai-health-platform",
     title: "OkeyBo AI Health Assistant",
+    category: "personal",
     imageSrc: [okeybo],
     href: "https://okeybo.uz/uz",
     github: "",
@@ -81,6 +89,7 @@ export const projects: ProjectItem[] = [
   {
     id: "pixeltech-website",
     title: "PixelTech IT Company Website",
+    category: "personal",
     imageSrc: [pixeltech],
     href: "http://pixeltech.uz/",
     github: "",
@@ -99,8 +108,33 @@ export const projects: ProjectItem[] = [
     link: "http://pixeltech.uz/",
   },
   {
+    id: "smaktab-education-platform",
+    title: "SMaktab Smart School Platform",
+    category: "professional",
+    imageSrc: [smaktab, smaktab1, smaktab2, smaktab3],
+    href: "https://smaktab.uz/",
+    github: "",
+    year: 2024,
+    description:
+      "AI-powered school management platform designed to digitalize and automate educational processes. The system provides an integrated dashboard for administrators, teachers, and parents to manage academic activities, monitor student performance, and organize school operations. It includes face recognition–based attendance tracking, AI-powered student mood detection, and real-time monitoring of student activity to ensure full visibility of the learning environment. The platform helps schools efficiently manage students, classes, and daily operations through a centralized and user-friendly interface.",
+    tags: [
+      "React",
+      "TypeScript",
+      "MUI",
+      "AI Integration",
+      "Face Recognition",
+      "Dashboard",
+      "Admin Panel",
+      "Education System",
+      "School Management",
+      "Web Application",
+    ],
+    link: "https://smaktab.uz/",
+  },
+  {
     id: "ssbrok-client-dashboard",
     title: "SSBrok Client Service Platform",
+    category: "professional",
     imageSrc: [ssbrok, ssbrok1, ssbrok2],
     href: "https://ssbrok.uz/",
     github: "",
@@ -123,6 +157,7 @@ export const projects: ProjectItem[] = [
   {
     id: "turon-montessori-landing",
     title: "Turon Montessori Website",
+    category: "professional",
     imageSrc: [
       turonmontessori,
       turonmontessori1,
@@ -149,6 +184,7 @@ export const projects: ProjectItem[] = [
   {
     id: "centrum-air-declaration-dashboard",
     title: "Centrum Air Declaration Management Dashboard",
+    category: "professional",
     imageSrc: [centrum],
     href: "https://centrum.edithapis.uz/",
     github: "",
