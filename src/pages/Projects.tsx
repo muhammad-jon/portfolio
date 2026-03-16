@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { ExternalLink, Github, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink, Github, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ProjectCard } from "../components/ProjectCard";
 import { projects, type ProjectItem } from "../data/projects";
@@ -8,6 +8,7 @@ export function Projects() {
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(
     null,
   );
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
@@ -16,12 +17,32 @@ export function Projects() {
       document.activeElement instanceof HTMLElement
         ? document.activeElement
         : null;
+    setSelectedImageIndex(0);
     setSelectedProject(project);
   }, []);
 
   const handleCloseModal = useCallback(() => {
+    setSelectedImageIndex(0);
     setSelectedProject(null);
   }, []);
+
+  const handlePreviousImage = useCallback(() => {
+    setSelectedImageIndex((currentIndex) => {
+      if (!selectedProject) return currentIndex;
+      return currentIndex === 0
+        ? selectedProject.imageSrc.length - 1
+        : currentIndex - 1;
+    });
+  }, [selectedProject]);
+
+  const handleNextImage = useCallback(() => {
+    setSelectedImageIndex((currentIndex) => {
+      if (!selectedProject) return currentIndex;
+      return currentIndex === selectedProject.imageSrc.length - 1
+        ? 0
+        : currentIndex + 1;
+    });
+  }, [selectedProject]);
 
   useEffect(() => {
     if (!selectedProject) return;
@@ -30,6 +51,15 @@ export function Projects() {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         handleCloseModal();
+        return;
+      }
+
+      if (selectedProject.imageSrc.length > 1 && event.key === "ArrowLeft") {
+        handlePreviousImage();
+      }
+
+      if (selectedProject.imageSrc.length > 1 && event.key === "ArrowRight") {
+        handleNextImage();
       }
     };
 
@@ -43,7 +73,11 @@ export function Projects() {
       document.body.style.overflow = previousOverflow;
       previousFocusRef.current?.focus();
     };
-  }, [handleCloseModal, selectedProject]);
+  }, [handleCloseModal, handleNextImage, handlePreviousImage, selectedProject]);
+
+  const selectedImage =
+    selectedProject?.imageSrc[selectedImageIndex] ?? selectedProject?.imageSrc[0];
+  const hasCarousel = (selectedProject?.imageSrc.length ?? 0) > 1;
 
   return (
     <>
@@ -109,11 +143,65 @@ export function Projects() {
 
               <div className="max-h-[90vh] overflow-y-auto">
                 <div className="relative aspect-[16/9] w-full overflow-hidden bg-page/30">
-                  <img
-                    src={selectedProject.imageSrc}
-                    alt={`${selectedProject.title} preview`}
-                    className="h-full w-full object-cover"
-                  />
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.img
+                      key={`${selectedProject.id}-${selectedImageIndex}`}
+                      src={selectedImage}
+                      alt={`${selectedProject.title} preview ${selectedImageIndex + 1}`}
+                      className="h-full w-full object-cover"
+                      initial={{ opacity: 0.35, scale: 1.02 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0.35, scale: 0.985 }}
+                      transition={{ duration: 0.22, ease: "easeOut" }}
+                    />
+                  </AnimatePresence>
+
+                  {hasCarousel ? (
+                    <>
+                      <div className="pointer-events-none absolute inset-x-0 top-4 flex items-center justify-between px-4">
+                        <span className="rounded-full bg-slate-950/65 px-3 py-1 text-xs font-medium text-white backdrop-blur-md">
+                          {selectedImageIndex + 1} / {selectedProject.imageSrc.length}
+                        </span>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={handlePreviousImage}
+                        aria-label="Previous project image"
+                        className="focus-ring absolute left-4 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-slate-950/65 text-white backdrop-blur-md transition hover:bg-slate-950/80"
+                      >
+                        <ChevronLeft size={18} />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={handleNextImage}
+                        aria-label="Next project image"
+                        className="focus-ring absolute right-4 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-slate-950/65 text-white backdrop-blur-md transition hover:bg-slate-950/80"
+                      >
+                        <ChevronRight size={18} />
+                      </button>
+
+                      <div className="absolute inset-x-0 bottom-4 flex justify-center px-4">
+                        <div className="flex items-center gap-2 rounded-full bg-slate-950/60 px-3 py-2 backdrop-blur-md">
+                          {selectedProject.imageSrc.map((_, imageIndex) => (
+                            <button
+                              key={`${selectedProject.id}-image-${imageIndex}`}
+                              type="button"
+                              onClick={() => setSelectedImageIndex(imageIndex)}
+                              aria-label={`Show project image ${imageIndex + 1}`}
+                              aria-current={selectedImageIndex === imageIndex}
+                              className={`h-2.5 rounded-full transition ${
+                                selectedImageIndex === imageIndex
+                                  ? "w-8 bg-white"
+                                  : "w-2.5 bg-white/45 hover:bg-white/70"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  ) : null}
                 </div>
 
                 <div className="space-y-5 p-6 md:p-8">

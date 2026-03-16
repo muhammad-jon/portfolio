@@ -28,7 +28,7 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
 
         <div className="relative aspect-[16/10] overflow-hidden  rounded-lg ">
           <img
-            src={project.imageSrc}
+            src={project.imageSrc[0]}
             alt={`${project.title} thumbnail`}
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]"

@@ -1,7 +1,12 @@
 import okeybo from "../assets/projects/okeybo.png";
 import pixeltech from "../assets/projects/pixeltech.png";
 import ssbrok from "../assets/projects/ssbrok.png";
+import ssbrok1 from "../assets/projects/ssbrok1.png";
+import ssbrok2 from "../assets/projects/ssbrok2.png";
 import turonmontessori from "../assets/projects/turonmontessori.png";
+import turonmontessori1 from "../assets/projects/turonmontessori1.png";
+import turonmontessori2 from "../assets/projects/turonmontessori2.png";
+import turonmontessori3 from "../assets/projects/turonmontessori3.png";
 import centrum from "../assets/projects/centrum.jpg";
 import speakify from "../assets/projects/speakify.png";
 import mesejebot from "../assets/projects/mesejebot.png";
@@ -9,7 +14,7 @@ import mesejebot from "../assets/projects/mesejebot.png";
 export type ProjectItem = {
   id: string;
   title: string;
-  imageSrc: string;
+  imageSrc: string[];
   href: string;
   github?: string;
   year?: number;
@@ -22,7 +27,7 @@ export const projects: ProjectItem[] = [
   {
     id: "speakify-voice-chat-platform",
     title: "Speakify Real-Time Voice Communication Platform",
-    imageSrc: speakify,
+    imageSrc: [speakify],
     href: "",
     github: "",
     year: 2026,
@@ -44,7 +49,7 @@ export const projects: ProjectItem[] = [
   {
     id: "meseje-anonymous-messaging-bot",
     title: "Meseje Topic-Based Anonymous Messaging Bot",
-    imageSrc: mesejebot,
+    imageSrc: [mesejebot],
     href: "",
     github: "",
     year: 2026,
@@ -64,7 +69,7 @@ export const projects: ProjectItem[] = [
   {
     id: "okeybo-ai-health-platform",
     title: "OkeyBo AI Health Assistant",
-    imageSrc: okeybo,
+    imageSrc: [okeybo],
     href: "https://okeybo.uz/uz",
     github: "",
     year: 2025,
@@ -76,7 +81,7 @@ export const projects: ProjectItem[] = [
   {
     id: "pixeltech-website",
     title: "PixelTech IT Company Website",
-    imageSrc: pixeltech,
+    imageSrc: [pixeltech],
     href: "http://pixeltech.uz/",
     github: "",
     year: 2025,
@@ -96,7 +101,7 @@ export const projects: ProjectItem[] = [
   {
     id: "ssbrok-client-dashboard",
     title: "SSBrok Client Service Platform",
-    imageSrc: ssbrok,
+    imageSrc: [ssbrok, ssbrok1, ssbrok2],
     href: "https://ssbrok.uz/",
     github: "",
     year: 2025,
@@ -118,8 +123,13 @@ export const projects: ProjectItem[] = [
   {
     id: "turon-montessori-landing",
     title: "Turon Montessori Website",
-    imageSrc: turonmontessori,
-    href: "https://turonmontessori.uz/",
+    imageSrc: [
+      turonmontessori,
+      turonmontessori1,
+      turonmontessori2,
+      turonmontessori3,
+    ],
+    href: "https://turon-montessori.vercel.app/",
     github: "",
     year: 2025,
     description:
@@ -134,12 +144,12 @@ export const projects: ProjectItem[] = [
       "SEO Optimization",
       "UI/UX",
     ],
-    link: "https://turonmontessori.uz/",
+    link: "https://turon-montessori.vercel.app/",
   },
   {
     id: "centrum-air-declaration-dashboard",
     title: "Centrum Air Declaration Management Dashboard",
-    imageSrc: centrum,
+    imageSrc: [centrum],
     href: "https://centrum.edithapis.uz/",
     github: "",
     year: 2025,
