@@ -24,6 +24,43 @@
 
 html {
   scroll-behavior: smooth;
+  scrollbar-gutter: stable;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--accent) / 0.5) hsl(var(--surface) / 0.7);
+}
+
+*::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: hsl(var(--surface) / 0.72);
+}
+
+*::-webkit-scrollbar-thumb {
+  border: 3px solid hsl(var(--surface) / 0.92);
+  border-radius: 9999px;
+  background: linear-gradient(
+    180deg,
+    hsl(var(--accent) / 0.72),
+    hsl(var(--muted) / 0.58)
+  );
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    hsl(var(--accent) / 0.88),
+    hsl(var(--muted) / 0.72)
+  );
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 body {

@@ -10,6 +10,7 @@ import turonmontessori3 from "../assets/projects/turonmontessori3.png";
 import centrum from "../assets/projects/centrum.jpg";
 import speakify from "../assets/projects/speakify.png";
 import mesejebot from "../assets/projects/mesejebot.png";
+import mesejebot2 from "../assets/projects/mesejebot2.png";
 import smaktab from "../assets/projects/smaktab.png";
 import smaktab1 from "../assets/projects/smaktab1.png";
 import smaktab2 from "../assets/projects/smaktab2.png";
@@ -56,7 +57,7 @@ export const projects: ProjectItem[] = [
     id: "meseje-anonymous-messaging-bot",
     title: "Meseje Topic-Based Anonymous Messaging Bot",
     category: "personal",
-    imageSrc: [mesejebot],
+    imageSrc: [mesejebot, mesejebot2],
     href: "",
     github: "",
     year: 2026,
@@ -80,7 +81,7 @@ export const projects: ProjectItem[] = [
     imageSrc: [okeybo],
     href: "https://okeybo.uz/uz",
     github: "",
-    year: 2025,
+    year: 2026,
     description:
       "AI-powered health assistant platform designed to help users quickly analyze symptoms and receive preliminary guidance before visiting a doctor. The platform provides fast AI triage, health recommendations, and an intuitive interface focused on accessibility and speed.",
     tags: ["React", "TypeScript", "Next.js", "Tailwind CSS"],
@@ -93,7 +94,7 @@ export const projects: ProjectItem[] = [
     imageSrc: [pixeltech],
     href: "http://pixeltech.uz/",
     github: "",
-    year: 2025,
+    year: 2026,
     description:
       "Corporate website for an IT services company showcasing software development solutions, company portfolio, and services. Built with a modern responsive interface focused on clear service presentation, performance, and user-friendly navigation.",
     tags: [
@@ -114,7 +115,7 @@ export const projects: ProjectItem[] = [
     imageSrc: [smaktab, smaktab1, smaktab2, smaktab3],
     href: "https://smaktab.uz/",
     github: "",
-    year: 2024,
+    year: 2025,
     description:
       "AI-powered school management platform designed to digitalize and automate educational processes. The system provides an integrated dashboard for administrators, teachers, and parents to manage academic activities, monitor student performance, and organize school operations. It includes face recognition–based attendance tracking, AI-powered student mood detection, and real-time monitoring of student activity to ensure full visibility of the learning environment. The platform helps schools efficiently manage students, classes, and daily operations through a centralized and user-friendly interface.",
     tags: [
@@ -157,7 +158,7 @@ export const projects: ProjectItem[] = [
   {
     id: "turon-montessori-landing",
     title: "Turon Montessori Website",
-    category: "professional",
+    category: "personal",
     imageSrc: [
       turonmontessori,
       turonmontessori1,
@@ -166,7 +167,7 @@ export const projects: ProjectItem[] = [
     ],
     href: "https://turon-montessori.vercel.app/",
     github: "",
-    year: 2025,
+    year: 2026,
     description:
       "Landing website for a Montessori-based kindergarten designed to present educational programs, facilities, and enrollment information for parents. Built with two different landing page versions, featuring a responsive UI, SEO optimization, and a clean design aligned with Montessori principles for clarity and trust.",
     tags: [

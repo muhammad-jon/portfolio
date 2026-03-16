@@ -1,5 +1,11 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, ExternalLink, Github, X } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+  Github,
+  X,
+} from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ProjectCard } from "../components/ProjectCard";
 import { projects, type ProjectItem } from "../data/projects";
@@ -84,7 +90,10 @@ export function Projects() {
 
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", onKeyDown);
-    const focusTimer = window.setTimeout(() => closeButtonRef.current?.focus(), 0);
+    const focusTimer = window.setTimeout(
+      () => closeButtonRef.current?.focus(),
+      0,
+    );
 
     return () => {
       window.clearTimeout(focusTimer);
@@ -95,7 +104,8 @@ export function Projects() {
   }, [handleCloseModal, handleNextImage, handlePreviousImage, selectedProject]);
 
   const selectedImage =
-    selectedProject?.imageSrc[selectedImageIndex] ?? selectedProject?.imageSrc[0];
+    selectedProject?.imageSrc[selectedImageIndex] ??
+    selectedProject?.imageSrc[0];
   const hasCarousel = (selectedProject?.imageSrc.length ?? 0) > 1;
 
   return (
@@ -110,8 +120,8 @@ export function Projects() {
         <header className="mb-7">
           <h1 className="text-4xl md:text-5xl">Projects</h1>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted md:text-base">
-            A split view of independent builds and projects shaped through client
-            and product work.
+            A split view of independent builds and projects shaped through
+            client and product work.
           </p>
         </header>
 
@@ -206,7 +216,8 @@ export function Projects() {
                     <>
                       <div className="pointer-events-none absolute inset-x-0 top-4 flex items-center justify-between px-4">
                         <span className="rounded-full bg-slate-950/65 px-3 py-1 text-xs font-medium text-white backdrop-blur-md">
-                          {selectedImageIndex + 1} / {selectedProject.imageSrc.length}
+                          {selectedImageIndex + 1} /{" "}
+                          {selectedProject.imageSrc.length}
                         </span>
                       </div>
 
